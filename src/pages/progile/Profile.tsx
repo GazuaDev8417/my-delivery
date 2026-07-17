@@ -4,9 +4,10 @@ import { useGlobal } from "../../global/Context"
 import { MdEdit } from "react-icons/md"
 import { AiOutlineLogout } from "react-icons/ai"
 import { IoIosArrowBack } from "react-icons/io"
+import { FaListAlt } from "react-icons/fa";
 import Header from "../../components/Header"
 import { Container } from "./styled"
-import formatPhoneNumber from "../../utils/formatPhoneNumber"
+import { formatPhoneNumber } from "../../utils/inputsAndKeys"
 
 
 
@@ -38,7 +39,7 @@ const Profile = ()=>{
     return(
         <>
             <Header
-                leftIcon={ <IoIosArrowBack className="header-icon" onClick={() => navigate(-1)} /> }
+                leftIcon={ <FaListAlt className="header-icon" onClick={() => navigate('/')} /> }
                 rightIcon={ <AiOutlineLogout className="header-icon" onClick={handleLogout} /> }
             />
             <Container>
