@@ -65,3 +65,6 @@ const Router:FC = ()=>{
         </Suspense>
     )
 }
+
+
+export default Router
