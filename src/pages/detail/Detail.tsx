@@ -164,13 +164,13 @@ const Detail:FC = ()=>{
                             className="image"
                         />
                         <button className="location" onClick={getPlace}>
-                            Localização
+                            Location
                             <FaMapMarkerAlt />
                         </button>               
                         <div className="desc">
                             <p>{restaurant.description}</p>
                         </div>
-                        <div className="products" title="Clique em uma das categorias abaixo">Menu Principal</div>
+                        <div className="products" title="Clique em uma das categorias abaixo">Menu</div>
                         
                         {/* Categories Navigation Bar */}
                         <CategoriesBar title="Clique para ver os produtos">
@@ -214,10 +214,10 @@ const Detail:FC = ()=>{
                                                         <div>R$ {Number(product.price).toFixed(2)}</div>
                                                     </div>
                                                     <button 
-                                                        className="request-button"
+                                                        className="btn-primary"
                                                         onClick={() => request(product)}
                                                     >
-                                                        Pedir
+                                                        Order
                                                     </button>                                    
                                                 </ProductCard>
                                             ))

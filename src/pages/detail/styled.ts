@@ -43,8 +43,9 @@ export const RestaurantCard = styled.div`
         padding: 10px;
         border-radius: 10px;
         transition: .5s ease-in;
-        background: transparent;
+        background: red;
         cursor: pointer;
+        color: white;
     }
 
     .location:active {
@@ -68,6 +69,7 @@ export const RestaurantCard = styled.div`
         margin: 10px;
         width: 100%;
         max-width: 500px;
+        font-size: 1.5rem;
     }
 
     .products-container {
@@ -111,10 +113,11 @@ export const CategoriesBar = styled.div`
     margin-bottom: 10px;
 
     /* Hide standard scrollbars for a cleaner UI while maintaining native scroll physics */
-    scrollbar-width: none; /* Firefox */
-    &::-webkit-scrollbar {
-        display: none; /* Chrome/Safari */
-    }
+    /* scrollbar-width: none; */ /* Firefox */
+    /* Chrome/Safari */
+    /* &::-webkit-scrollbar {
+        display: none; 
+    } */
 
     h3 {
         white-space: nowrap;

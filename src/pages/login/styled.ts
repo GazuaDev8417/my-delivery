@@ -68,16 +68,19 @@ export const Container = styled.div`
     }
  
     .login-button {
-        padding: 5px;
+        padding: 10px;
         color: white;
         font-size: 1rem;
         font-weight: 500;
         box-shadow: 1px 1px 4px black;
+        background: #990f0f;
+        cursor: pointer;
+        border-radius: 5px;
+        border: none;
     }
 
     .login-button:hover {
         box-shadow: 0 0 6px #a11414;
-        background-color: #990f0f;
     }
 
     .login-button:focus {

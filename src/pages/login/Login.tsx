@@ -1,5 +1,4 @@
 import { type FC, type SubmitEvent, useEffect, useState } from 'react'
-import Header from '../../components/Header'
 import { FaEyeSlash, FaEye } from 'react-icons/fa'
 import { useNavigate, Link } from 'react-router-dom'
 import { AppRoutes } from '../../routes/path'
@@ -88,12 +87,12 @@ const Login:FC = ()=>{
                 </div>
                 <div className="btn-container">
                     {/* 4. Specified type="button" so this button won't submit the form */}
-                    <button className="login-button" type="button" onClick={clear}>Limpar</button>
-                    <button className="login-button" type="submit">Entrar</button>
+                    <button className="login-button" type="button" onClick={clear}>Clear</button>
+                    <button className="login-button" type="submit">Enter</button>
                 </div>
             </form>
             <p>
-                Não possui cadastro? clique <Link to={AppRoutes.SIGNUP}> aqui</Link>
+                Don't have an accoount?<Link to={AppRoutes.SIGNUP}> Click here</Link>
             </p>
         </Container>
     )
