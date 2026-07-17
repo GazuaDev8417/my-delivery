@@ -3,7 +3,6 @@ export const AppRoutes = {
     CART: '/cart',
     PROFILE: '/profile', 
     EDIT_PROFILE: '/edit-profile',
-    SIGNUP: '/signup',
     ADDRESS: '/user-address',
     LOGIN: '/login'
 } as const

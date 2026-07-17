@@ -1,6 +1,6 @@
 import { type FC, type SubmitEvent, useEffect, useState } from 'react'
 import { FaEyeSlash, FaEye } from 'react-icons/fa'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AppRoutes } from '../../routes/path'
 import { userForm } from '../../hooks/useForm'
 import { authService } from '../../services/auth'
@@ -13,7 +13,7 @@ const Login:FC = ()=>{
     const navigate = useNavigate()
     const [showPass, setShowPass] = useState<boolean>(false)
     const { form, onChange, clear } = userForm({
-        email: 'visitante@email.com',
+        email: 'visitor@email.com',
         password: '123456'
     })
 
@@ -91,9 +91,6 @@ const Login:FC = ()=>{
                     <button className="login-button" type="submit">Enter</button>
                 </div>
             </form>
-            <p>
-                Don't have an accoount?<Link to={AppRoutes.SIGNUP}> Click here</Link>
-            </p>
         </Container>
     )
 }
