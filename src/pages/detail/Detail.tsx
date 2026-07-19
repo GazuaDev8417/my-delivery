@@ -191,7 +191,7 @@ const Detail:FC = ()=>{
                             type="text" 
                             value={searchWord}
                             onChange={handleInputSearch}
-                            placeholder="Buscar produto"
+                            placeholder="Search product"
                         />
 
                         {/* Filtered Products Container */}
@@ -225,7 +225,7 @@ const Detail:FC = ()=>{
                                         {group.items.filter(product => (
                                             product.name.toLocaleLowerCase().includes(searchWord.toLowerCase())
                                         )).length === 0 && (
-                                            <p>Nenhum produto encontrado nessa categoria</p>
+                                            <p>No product found in this category</p>
                                         )}
                                     </div>
                                 )

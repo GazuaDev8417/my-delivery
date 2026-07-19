@@ -108,7 +108,7 @@ export const CategoriesBar = styled.div`
     width: 100%;
     max-width: 500px;
     overflow-x: auto;
-    padding: 0.5rem 0;
+    padding: 1rem 0;
     border-bottom: 1px solid #ddd;
     margin-bottom: 10px;
 

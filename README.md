@@ -30,8 +30,6 @@ Deeply integrated with the **Mercado Pago API gateway** for transaction handling
 ### 🛠️ Defensive Validations & Custom Hooks
 Isolated core components (such as shipping fields, dynamic addresses, and cart changes) behind tailored custom React hooks. Input components handle aggressive sanitization, sanitizing payloads prior to external backend updates.
 
-### 📝 Swagger API Documentation
-Backend controllers and services are fully documented under the **OpenAPI Spec (Swagger UI)**. This ensures strict contractual alignment between frontend requests and endpoint layers.
 
 ---
 
@@ -47,6 +45,14 @@ meu-delivery/
 │   ├── routes/           # Protected layout paths with code-splitting mechanisms
 │   ├── services/         # Absolute API client abstractions mapping raw endpoints
 │   └── views/            # Main structural application screens/pages
-├── swagger/              # Structured OpenAPI specification configurations
 ├── package.json          # Node infrastructure configuration dependencies
 └── README.md             # Repository documentation
+
+```
+
+
+## 👨‍💻 Author
+
+Developed by **Flamarion França**.
+
+If you enjoyed this project, consider giving it a ⭐ on GitHub.
