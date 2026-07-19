@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"
 import { useGlobal } from "../../global/Context"
 import { MdEdit } from "react-icons/md"
 import { AiOutlineLogout } from "react-icons/ai"
-import { IoIosArrowBack } from "react-icons/io"
 import { FaListAlt } from "react-icons/fa";
 import Header from "../../components/Header"
 import { Container } from "./styled"

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useGlobal } from "../../global/Context"
-import { handleKeyPress, formatPhoneNumber } from "../../utils/inputsAndKeys"
+import { handleKeyPress } from "../../utils/inputsAndKeys"
 import { BASE_URL } from "../../constants/url"
 import { Container } from "./styled"
 

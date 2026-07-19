@@ -1,4 +1,4 @@
-import { FC, useState, Dispatch, SetStateAction } from "react"
+import { type FC, useState, type Dispatch, type SetStateAction } from "react"
 import axios from "axios"
 import { BASE_URL } from "../constants/url"
 import { IoIosCloseCircleOutline } from "react-icons/io";
