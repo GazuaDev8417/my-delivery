@@ -198,7 +198,7 @@ const Detail:FC = ()=>{
                         <div className="products-container" ref={productsRef}>
                             {groupedProducts.map(group => (
                                 openCategory === group.category && (
-                                    <div key={group.category}>
+                                    <div key={group.category} className='productCard-container'>
                                         {group.items
                                             .filter(product => product.name.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase()))
                                             .map(product => (

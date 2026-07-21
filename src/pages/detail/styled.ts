@@ -81,6 +81,13 @@ export const RestaurantCard = styled.div`
         align-items: center;
     }
 
+    .productCard-container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     @media(max-width: 830px) {
         width: 80vw;
 
@@ -150,6 +157,10 @@ export const ProductCard = styled.div`
     padding: 10px;
     width: 60vw;
     max-width: 700px;
+
+    @media(max-width: 830px){
+        width: 150vw;
+    }
 
     .product-image {
         border-radius: 10px;

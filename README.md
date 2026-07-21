@@ -1,58 +1,55 @@
-# Meu-Delivery 🚀
+# Delivery App (Customer-Facing) — Freelance Portfolio Project
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![React](https://img.shields.io/badge/React-18.x-61dafb?logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
+A responsive full-stack web application for food and product delivery, built with React, TypeScript, and Styled Components. This repository represents the consumer/customer ecosystem, enabling users to browse dynamic, category-organized menus, manage their shopping cart locally, and process instant digital payments.
 
-An enterprise-grade, high-performance full-stack ecosystem engineered for seamless on-demand delivery scaling. This repository contains the customer-facing core client, completely refactored from legacy structures into a highly modular, decoupled architecture following strict clean-code metrics and international industry standards.
+> 🌐 **Portfolio Note:** While this application is operationally tailored to the Brazilian delivery market (integrating systems like Pix and CEP-based addressing), **the source code, architecture, and interface were intentionally developed in English** to effectively demonstrate full-stack engineering proficiency to international recruiters.
 
 ---
 
-## 🗺️ System Architecture Overview
+## 🚀 Key Features
 
-The system is built on an optimized decoupled frontend stack that eliminates unnecessary coupling between raw API states and the view layer, providing seamless performance and high scannability.
-
-* **Frontend Engine:** Built with **React 18**, **TypeScript** for strict type-safety, and styled layouts.
-* **State Management Paradigm:** Managed globally through a centralized `useGlobal` atomic context abstraction, preventing prop-drilling across multi-stage cart flows.
-* **Routing Guard Infrastructure:** Configured with **React Router v6** utilizing lazy loading mechanics to dramatically minimize initial bundle sizes.
-
----
-
-## 🔥 Key Technical Improvements & Refactoring
-
-### ⚡ Parallel Data Fetching & Memoization
-Re-engineered heavy dashboard workflows away from rendering waterfalls. Components leverage concurrent asynchronous promises running in parallel, combined with strategic `React.memo` and `useMemo` hooks to shield intensive UI layers from unnecessary state broadcast re-renders.
-
-### 💳 Mercado Pago API Checkout
-Deeply integrated with the **Mercado Pago API gateway** for transaction handling. The checkout architecture fires payloads securely, instantiating instantaneous dynamic QR Codes for instant **Pix payouts** alongside real-time status monitoring workflows.
-
-### 🛠️ Defensive Validations & Custom Hooks
-Isolated core components (such as shipping fields, dynamic addresses, and cart changes) behind tailored custom React hooks. Input components handle aggressive sanitization, sanitizing payloads prior to external backend updates.
-
+*   **Dynamic Menu Browsing (`Detail` Page):** Fetches establishment and product metadata concurrently using optimized parallel promises. Products are cleanly grouped by business category filters, utilizing memoized state selectors to prevent performance degradation caused by re-renders.
+*   **Reactive Cart Lifecycle (`Cart` Page):** Allows real-time quantity adjustments, enforcing a minimum limit of 1 item and instantly synchronizing updates with backend controllers via unified Axios wrappers.
+*   **Profile & Address Hub (`Profile` Page):** Manages essential user data, including phone number formatting and delivery logistics optimized for Brazilian postal codes (CEP), states, and neighborhoods.
+*   **Integrated Payment Gateways:**
+*   **Mercado Pago (Pix & Credit Card):** Seamlessly processes local card tokens or generates instant Pix QR codes, utilizing real-time background status polling. *   **WhatsApp Deep-Linking Security Mechanism:** Implements fallback logic for order confirmation, concatenating items and delivery addresses to forward text data directly to the merchant's WhatsApp channel (`+55`).
 
 ---
 
-## 📂 Repository Directory Tree
+## 🛠️ Architecture and Tech Stack
 
-```text
-meu-delivery/
-├── src/
-│   ├── components/       # Atomically split presentational elements (Header, Cart, etc.)
-│   ├── constants/        # Global system configuration primitives (URLs, Enums)
-│   ├── global/           # Centralized useGlobal state provider contexts
-│   ├── hooks/            # Isolated custom hooks for decoupled business logic
-│   ├── routes/           # Protected layout paths with code-splitting mechanisms
-│   ├── services/         # Absolute API client abstractions mapping raw endpoints
-│   └── views/            # Main structural application screens/pages
-├── package.json          # Node infrastructure configuration dependencies
-└── README.md             # Repository documentation
+*   **Frontend Library:** React (Functional Components with Hooks)
+*   **Type Safety:** TypeScript (Strictly typed schemas for `User`, `Order`, `Products`, and `Restaurant`)
+*   **State Architecture:** Context API using custom hooks (`useGlobal`) with memoized asynchronous routines (`useCallback`) to preserve reference stability.
+*   **Styling Engine:** Styled Components (CSS-in-JS layout structure)
+*   **HTTP Client:** Axios with centralized authorization interceptors, tracking Bearer tokens in the browser's `localStorage`.
+
+---
+
+## 📂 Key Components and Data Flow Details
+
+### 1. Global State Hub (`Context.tsx`)
+Acts as the central engine. Restricts access to sensitive components via route authentication checks. Exposes requests that include the authentication token for:
+*   `GET /profile` — Populates active identity states.
+*   `GET /active_orders` — Populates local state arrays for the shopping cart.
+
+### 2. Product Matrix (`Detail.tsx`)
+Renders category-organized listings. Incorporates a smart scroll anchor via `useRef` to smoothly guide users to search queries. Upon clicking, it immediately compiles order item data payloads:
+```typescript
+{
+    product: string,
+    price: number,
+    quantity: 1,
+    total: number,
+    momentString: string // ISO Timestamp
+}
 
 ```
 
+---
 
 ## 👨‍💻 Author
 
-Developed by **Flamarion França**.
-
-If you enjoyed this project, consider giving it a ⭐ on GitHub.
+Developed by **Flamarion França** \
+Portolio page: https://portfolio-vtu0.onrender.com \
+Application link: https://my-delivery-omega.vercel.app

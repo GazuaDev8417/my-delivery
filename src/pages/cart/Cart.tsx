@@ -143,7 +143,7 @@ const Cart:FC = ()=>{
             const response = await axios.post(`${BASE_URL}/pay`, {
                 paymentMethodId: 'pix',
                 email: user.email,
-                item: cart.map(item=>({
+                items: cart.map(item=>({
                     title: item.product,
                     quantity: item.quantity,
                     unit_price: Number(item.price)
