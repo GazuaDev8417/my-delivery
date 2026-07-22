@@ -117,8 +117,7 @@ const Detail:FC = ()=>{
                 navigate(AppRoutes.CART)
             }
         }catch(e:any){
-            const message = e?.response?.data || 'Error sending request'
-            const decide = confirm(message)
+            const decide = confirm(e.message)
             if(decide){
                 navigate(AppRoutes.CART)
             }

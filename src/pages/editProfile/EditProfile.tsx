@@ -70,7 +70,7 @@ const EditProfile:FC = ()=>{
         }
         
         try {
-            await axios.patch(`${BASE_URL}/user`, body, config)
+            await axios.put(`${BASE_URL}/users/profile`, body, config)
             alert("Profile updated successfully!")
             navigate('/profile')
         } catch (error: any) {

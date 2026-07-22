@@ -37,7 +37,7 @@ const Login:FC = ()=>{
         try{
             const data = await authService.login(body)
 
-            localStorage.setItem('token', data.token)
+            localStorage.setItem('token', data)
             navigate(AppRoutes.HOME)
         }catch(e:any){
             const errorMessage = e?.response?.data || 'Ocorreu um erro no login. Tente novamente.'

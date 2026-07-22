@@ -49,6 +49,7 @@ export const Container = styled.div`
     }
 
     .rest-name {
+        text-align: center;
         font-size: 1.4rem;
         font-weight: 600;
         color: #333;
@@ -95,7 +96,7 @@ export const Container = styled.div`
         background: #fff;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 
-        .product-image-wrapper img {
+        img {
             width: 90px;
             height: 90px;
             object-fit: cover;

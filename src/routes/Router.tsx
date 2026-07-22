@@ -11,7 +11,7 @@ const Cart = lazy(() => import('../pages/cart/Cart'))
 const UserAddress = lazy(() => import('../pages/address/UserAddress'))
 const Login = lazy(() => import('../pages/login/Login'))
 const Profile = lazy(() => import('../pages/progile/Profile'))
-const EditoProfile = lazy(() => import('../pages/editProfile/EditProfile'))
+const EditProfile = lazy(() => import('../pages/editProfile/EditProfile'))
 
 
 const PageLoader = () => <div className="flex h-screen items-center justify-center">Loading...</div>
@@ -46,7 +46,7 @@ const Router:FC = ()=>{
                     path={AppRoutes.EDIT_PROFILE} 
                     element={
                         <ProtectedRoutes>
-                            <EditoProfile/>
+                            <EditProfile/>
                         </ProtectedRoutes>
                     }/>
                 

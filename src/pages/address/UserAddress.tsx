@@ -98,7 +98,7 @@ const UserAddress:FC = ()=>{
         }
         
         try {
-            await axios.patch(`${BASE_URL}/user-address`, form, config)
+            await axios.put(`${BASE_URL}/users/address`, form, config)
             await getProfile()
             
             alert(mode === 'create' ? "Address registered successfully!" : "Address updated successfully!")

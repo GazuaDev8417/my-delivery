@@ -3,15 +3,11 @@ import { BASE_URL } from "../constants/url"
 
 
 
-interface LoginResponse{
-    token:string
-    role:string
-}
 
 
 export const authService = {
-    login: async(body:object):Promise<LoginResponse>=>{
-        const response = await axios.post<LoginResponse>(`${BASE_URL}/login`, body)
+    login: async(body:object):Promise<string>=>{
+        const response = await axios.post<string>(`${BASE_URL}/users/login`, body)
         return response.data
     }
 }

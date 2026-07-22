@@ -49,8 +49,7 @@ export const GlobalState = ({ children }:GlobalStateProps)=>{
         state: '',
         complement: '',
         phone: '',
-        cep: '',
-        role: ''
+        cep: ''
     })
 
 
@@ -64,7 +63,7 @@ export const GlobalState = ({ children }:GlobalStateProps)=>{
         }
 
         try{
-            const response = await axios.get(`${BASE_URL}/active_orders`, config)
+            const response = await axios.get(`${BASE_URL}/orders/active`, config)
             setCart(response.data)
         }catch(e:any){
             console.error('Failed to fetch active orders', e.response?.data || e.message)
@@ -80,7 +79,7 @@ export const GlobalState = ({ children }:GlobalStateProps)=>{
         }
 
         try {
-            const response = await axios.get(`${BASE_URL}/profile`, config)
+            const response = await axios.get(`${BASE_URL}/users/profile`, config)
             setUser(response.data)
         } catch (e: any) {
             console.error("Failed to fetch profile:", e.response?.data || e.message)

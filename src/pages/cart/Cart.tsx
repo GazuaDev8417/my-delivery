@@ -103,7 +103,7 @@ const Cart:FC = ()=>{
         setCart(updatedCart)
 
         try{
-            await axios.patch(`${BASE_URL}/order/${id}`, { quantity: newQuantity })
+            await axios.patch(`${BASE_URL}/orders/${id}/quantity`, { quantity: newQuantity })
         }catch(e:any){
             console.error(e.response?.data || "Failed to sync element adjustments")
         }
@@ -113,11 +113,11 @@ const Cart:FC = ()=>{
     const removeItem = async(id:string)=>{
         const config = { headers: { Authorization: token }}
         try{
-            await axios.delete(`${BASE_URL}/order/${id}`, config)
+            await axios.delete(`${BASE_URL}/orders/${id}`, config)
             setCart(prev => prev.filter(order => order.id !== id))
             getAllOrders()
         }catch(e:any){
-            alert(e.response?.data || "Failed to remove items from cart.")
+            alert(e.message || "Failed to remove items from cart.")
         }
     }
 
@@ -140,7 +140,7 @@ const Cart:FC = ()=>{
         setMethod('pix')
 
         try{
-            const response = await axios.post(`${BASE_URL}/pay`, {
+            const response = await axios.post(`${BASE_URL}/orders/payment`, {
                 paymentMethodId: 'pix',
                 email: user.email,
                 items: cart.map(item=>({
@@ -151,9 +151,9 @@ const Cart:FC = ()=>{
             })
 
             setStatus(response.data.status || 'pending')
-            setQrCode(response.data.qr_code || null)
-            setQrCodeBase64(response.data.qr_code_base64 || null)
-            setQrCodeLink(response.data.qr_code_link || null)
+            setQrCode(response.data.qrCode || null)
+            setQrCodeBase64(response.data.qrCodeBase64 || null)
+            setQrCodeLink(response.data.qrCodeLink || null)
 
             const orderId = response.data.id
             if(!orderId) throw new Error('Payment gateway order identity failed.')
@@ -161,7 +161,7 @@ const Cart:FC = ()=>{
             // Safe stateful background interval polling instance
             pollingIntervalRef.current = setInterval(async()=>{
                 try{
-                    const statusRes = await fetch(`${BASE_URL}/payment-status/${orderId}`)
+                    const statusRes = await fetch(`${BASE_URL}/orders/payment/${orderId}/status`)
                     const statusData = await statusRes.json()
 
                     if(statusData.status === 'approved'){
