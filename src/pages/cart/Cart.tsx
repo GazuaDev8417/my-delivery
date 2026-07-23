@@ -67,6 +67,17 @@ const Cart:FC = ()=>{
         setTotal(calculateTotal(cart))
     }, [cart])
 
+
+    useEffect(() => {
+        if (cart.length === 0) {
+            setQrCode(null)
+            setQrCodeBase64(null)
+            setQrCodeLink(null)
+            setMethod(null)
+            setStatus('')
+        }
+    }, [cart.length])
+
     // UI Escape Key Listener for Modals
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -93,7 +104,8 @@ const Cart:FC = ()=>{
             cartRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
     }, [hasQrCode, cart.length])
-
+    
+    
 
 
     const handleQuantityChange = async(e:ChangeEvent<HTMLInputElement>, id:string)=>{
@@ -104,6 +116,7 @@ const Cart:FC = ()=>{
 
         try{
             await axios.patch(`${BASE_URL}/orders/${id}/quantity`, { quantity: newQuantity })
+            handlePixPayment()
         }catch(e:any){
             console.error(e.response?.data || "Failed to sync element adjustments")
         }
@@ -116,6 +129,7 @@ const Cart:FC = ()=>{
             await axios.delete(`${BASE_URL}/orders/${id}`, config)
             setCart(prev => prev.filter(order => order.id !== id))
             getAllOrders()
+            handlePixPayment()
         }catch(e:any){
             alert(e.message || "Failed to remove items from cart.")
         }

@@ -52,14 +52,27 @@ const Detail:FC = ()=>{
     useEffect(()=>{
         const loadPageData = async()=>{
             try{
-                const [restaurantData, productsData] = await Promise.all([
+                const [restaurantData, productsData] = await Promise.allSettled([
                     restaurantService.getRestaurant(),
                     restaurantService.getProducts()
                 ])
-                setRestaurant(restaurantData)
-                setProducts(productsData)
-            }catch(e){
-                console.error('Failed to fetch initial home page data: ', e)
+
+                if(restaurantData.status === 'fulfilled'){
+                    setRestaurant(restaurantData.value)
+                }else{
+                    const error = restaurantData.reason
+                    console.error(error?.response?.data?.message || error?.resonse?.data || error)
+                }
+                
+                if(productsData.status === 'fulfilled'){
+                    setProducts(productsData.value)
+                }else{
+                    const error = productsData.reason
+                    console.error(error?.response?.data?.message || error?.resonse?.data || error)
+                }
+            }catch(e:any){
+                const errorMessage = e?.response?.data?.message || e?.response?.data
+                console.error(errorMessage)
             }
         }
 

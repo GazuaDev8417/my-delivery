@@ -72,14 +72,14 @@ const MpModal:FC<MpModalProps> = ({ setModalOpen, setQrCode, total })=>{
 
             const orderId = res.data.id;
             const interval = setInterval(async () => {
-                const statusRes = await fetch(`${BASE_URL}/payment-status/${orderId}`)
+                const statusRes = await fetch(`${BASE_URL}/orders/payment/${orderId}/status`)
                 const statusData = await statusRes.json();
-                console.log(statusData)
+                
                 if (statusData.status === 'approved') {
                     clearInterval(interval);
-                    alert('Pagamento com Pix aprovado! 🎉');
+                    alert('Your payment with pix was approved! 🎉');
                 }else if(statusData.status === 'pending'){
-                    console.error('Pagemento pendente')
+                    console.error('Pending payment')
                 }
             }, 5000)
         }catch(e){
