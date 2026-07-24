@@ -79,6 +79,7 @@ const Detail:FC = ()=>{
         loadPageData()
     }, [])
 
+
     useEffect(()=>{
         if(openCategory && productsRef.current){
             productsRef.current.scrollIntoView({ behavior: 'smooth' })
@@ -150,7 +151,8 @@ const Detail:FC = ()=>{
         const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurant.address)}`
         window.open(url, '_blank') 
     }
-
+    
+    
 
 
     return(

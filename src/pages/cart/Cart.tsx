@@ -118,7 +118,7 @@ const Cart:FC = ()=>{
             await axios.patch(`${BASE_URL}/orders/${id}/quantity`, { quantity: newQuantity })
             handlePixPayment()
         }catch(e:any){
-            console.error(e.response?.data || "Failed to sync element adjustments")
+            console.error(e?.response?.data?.message || e?.response?.data || e?.message)
         }
     }
 
@@ -131,7 +131,7 @@ const Cart:FC = ()=>{
             getAllOrders()
             handlePixPayment()
         }catch(e:any){
-            alert(e.message || "Failed to remove items from cart.")
+            console.error(e?.response?.data?.message || e?.response?.data || e?.message)
         }
     }
 
@@ -142,8 +142,8 @@ const Cart:FC = ()=>{
             await axios.patch(`${BASE_URL}/finish_orders`, {}, config)
             getAllOrders()
             setCart([])
-        }catch(e){
-            console.error("Failed to clear local order list logs:", e)
+        }catch(e:any){
+            console.error(e?.response?.data?.message || e?.response?.data || e?.message)
         }
     }
 
@@ -189,8 +189,8 @@ const Cart:FC = ()=>{
                 }
             }, 5000)
         }catch(e:any){
-            console.error('Processing transaction breakdown payload logic exception: ', e)
-            alert(e.response?.data || 'Failed to initialize payment workflow.')
+            console.error(e?.response?.data?.message || e?.response?.data || e?.message)
+            alert(e?.response?.data?.message || 'Failed to initialize payment workflow.')
         }finally{
             setIsProcessing(false)
         }

@@ -78,8 +78,8 @@ const UserAddress:FC = ()=>{
                 city: res.data.localidade || '',
                 state: res.data.uf || ''
             }))
-        }catch(e){
-            console.error("Failed to auto-fetch address via CEP:", e)
+        }catch(e:any){
+            console.error(e?.response?.data?.message || e?.response?.data || e?.message)
         }
     }
 

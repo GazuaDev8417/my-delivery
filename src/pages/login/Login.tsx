@@ -40,7 +40,7 @@ const Login:FC = ()=>{
             localStorage.setItem('token', data)
             navigate(AppRoutes.HOME)
         }catch(e:any){
-            const errorMessage = e?.response?.data || e.message
+            const errorMessage = e?.response?.data?.message || e?.response?.data || e?.message
             alert(errorMessage)
         }
     }
