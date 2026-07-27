@@ -52,4 +52,4 @@ Renders category-organized listings. Incorporates a smart scroll anchor via `use
 
 Developed by **Flamarion França** \
 Portolio page: https://portfolio-vtu0.onrender.com \
-Application link: https://my-delivery-omega.vercel.app
+Application link: https://my-delivery-silk.vercel.app
