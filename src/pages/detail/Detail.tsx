@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import Context,  { type GlobalStateContextType } from '../../global/Context'
 import Header from '../../components/Header'
 import { IoPersonOutline, IoCartOutline } from 'react-icons/io5'
+import { AiOutlineLogin } from "react-icons/ai"
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import type { Products, Restaurant } from '../../types/types'
 import { Container, RestaurantCard, CategoriesBar, ProductCard } from './styled'
@@ -161,7 +162,7 @@ const Detail:FC = ()=>{
                 leftIcon={
                     token ? (
                         <IoCartOutline className="header-icon" onClick={() => navigate(AppRoutes.CART)} />
-                    ) : <div/>
+                    ) : <AiOutlineLogin className="header-icon" onClick={() => navigate(AppRoutes.LOGIN)} />
                 }
                 rightIcon={
                     token ? (
