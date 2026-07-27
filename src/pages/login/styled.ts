@@ -1,4 +1,3 @@
-// src/pages/login/styled.ts
 import styled from 'styled-components'
 
 export const Container = styled.div`

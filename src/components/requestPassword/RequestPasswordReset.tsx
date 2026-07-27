@@ -16,7 +16,7 @@ interface ModalProps{
 
 const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{
     const dialogRef = useRef<HTMLDialogElement>(null)
-    const { clear, onChange, form } = userForm({ email:'testando' })
+    const { clear, onChange, form } = userForm({ email:'visitor@email.com' })
 
 
 
@@ -95,7 +95,7 @@ const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{
             <ModalContent>
                 <CloseButton onClick={onClose}>&times;</CloseButton>
                 <h2>Reset Password</h2>
-                <small className="subtitle">A link will be sent to the email you provide</small>
+                <small className="subtitle">A link will be sent to an email account test</small>
 
                 <form onSubmit={handleSubmit}>               
                     <div className="input-container">
@@ -116,7 +116,7 @@ const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{
                     <div className="btn-container">
                         {/* 4. Specified type="button" so this button won't submit the form */}
                         <button className="login-button" type="button" onClick={clear}>Clear</button>
-                        <button className="login-button" type="submit">Enter</button>
+                        <button className="login-button" type="submit">Send</button>
                     </div>
                 </form>
             </ModalContent>

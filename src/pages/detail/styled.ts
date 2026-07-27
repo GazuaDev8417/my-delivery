@@ -27,6 +27,7 @@ export const RestaurantCard = styled.div`
     margin: 0 auto 10vh;
 
     .image {
+        object-fit: contain;
         margin-top: 20px;
         box-shadow: 2px 2px 4px;
         border-radius: 10px;
