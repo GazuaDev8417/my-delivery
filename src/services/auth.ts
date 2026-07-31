@@ -1,7 +1,7 @@
 import axios from "axios"
-import { BASE_URL } from "../constants/url"
 
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 

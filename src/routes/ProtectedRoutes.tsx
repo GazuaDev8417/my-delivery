@@ -1,7 +1,7 @@
 import type { FC, ReactElement} from "react"
 import { Navigate, useLocation } from 'react-router-dom'
 import { AppRoutes } from "./path"
-
+import { useAuth } from "../global/AuthContext"
 
 
 interface ProtectedRoutesProps{
@@ -10,10 +10,10 @@ interface ProtectedRoutesProps{
 
 
 const ProtectedRoutes:FC<ProtectedRoutesProps> = ({ children })=>{
-    const isAuthenticated = !!localStorage.getItem('token')
+    const { token } = useAuth()
     const location = useLocation()
 
-    if(!isAuthenticated){
+    if(!token){
         return <Navigate to={AppRoutes.LOGIN} state={{from: location}} replace />
     }
 

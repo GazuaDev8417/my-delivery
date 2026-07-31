@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { AppRoutes } from '../../routes/path'
 import { userForm } from '../../hooks/useForm'
 import { authService } from '../../services/auth'
+import { useAuth } from '../../global/AuthContext'
 import RequestPasswordReset from '../../components/requestPassword/RequestPasswordReset'
 import { Container, PasswordFieldWrapper } from './styled'
 
@@ -12,11 +13,12 @@ import { Container, PasswordFieldWrapper } from './styled'
 
 const Login:FC = ()=>{
     const navigate = useNavigate()
+    const { login } = useAuth()
     const [showPass, setShowPass] = useState<boolean>(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const { form, onChange, clear } = userForm({
-        email: 'visitor@email.com',
-        password: '123456'
+        email: '',
+        password: ''
     })
 
 
@@ -37,9 +39,10 @@ const Login:FC = ()=>{
         }
 
         try{
-            const data = await authService.login(body)
+            const tokenData = await authService.login(body)
+            login(tokenData)
 
-            localStorage.setItem('token', data)
+            localStorage.setItem('token', tokenData)
             navigate(AppRoutes.HOME)
         }catch(e:any){
             const errorMessage = e?.response?.data?.message || e?.response?.data || e?.message

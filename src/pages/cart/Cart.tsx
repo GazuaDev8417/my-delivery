@@ -2,7 +2,6 @@ import { type ChangeEvent, type FC, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useGlobal } from "../../global/Context"
-import { BASE_URL } from "../../constants/url"
 import { IoPersonOutline } from "react-icons/io5"
 import { IoIosArrowBack } from 'react-icons/io'
 import { MdEdit } from 'react-icons/md'
@@ -12,7 +11,7 @@ import { Container } from "./styled"
 import type { Order } from "../../types/types"
 import { initMercadoPago } from "@mercadopago/sdk-react"
 
-
+const BASE_URL = import.meta.env.VITE_BASE_URL
 const PUBLIC_KEY = import.meta.env.VITE_PUBLIC_KEY_TP
 if (PUBLIC_KEY) {
     initMercadoPago(PUBLIC_KEY)

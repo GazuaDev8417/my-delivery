@@ -1,11 +1,12 @@
 import { type FC, useState, type Dispatch, type SetStateAction } from "react"
 import axios from "axios"
-import { BASE_URL } from "../constants/url"
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { initMercadoPago, CardPayment } from "@mercadopago/sdk-react"
-
-
 import styled from "styled-components"
+
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 const Container = styled.div`

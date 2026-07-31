@@ -4,14 +4,15 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useGlobal } from "../../global/Context"
 import { handleKeyPress } from "../../utils/inputsAndKeys"
-import { BASE_URL } from "../../constants/url"
 import { Container } from "./styled"
 
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 interface FormData {
     username: string
+    email:string
     phone: string
 }
 
@@ -23,6 +24,7 @@ const EditProfile:FC = ()=>{
     const token = localStorage.getItem('token')
     const [form, setForm] = useState<FormData>({
         username: '',
+        email: '',
         phone: ''
     })
 
@@ -39,6 +41,7 @@ const EditProfile:FC = ()=>{
         if (user && user.username) {
             setForm({
                 username: user.username,
+                email: user.email,
                 phone: user.phone || ''
             })
         }
@@ -58,6 +61,7 @@ const EditProfile:FC = ()=>{
 
         const body = {
             username: form.username,
+            email: form.email,
             phone: form.phone.replace(/\D/g, '')
         }
 
@@ -79,6 +83,7 @@ const EditProfile:FC = ()=>{
     const clearForm = (): void => {
         setForm({
             username: '',
+            email: '',
             phone: ''
         })
     }
@@ -88,9 +93,6 @@ const EditProfile:FC = ()=>{
     return(
         <Container>
             <div className="title">Update Profile</div>
-            <small className="obs-container">
-                You won't can change the email <br /> because it's a credential to access the application.
-            </small>
             <form onSubmit={updateUser}>
                 <label htmlFor="name" className="sr-only">Full Name</label>
                 <input
@@ -104,6 +106,19 @@ const EditProfile:FC = ()=>{
                     autoComplete="name"
                     aria-label="User Full Name"
                     required
+                />
+                
+                <label htmlFor="email" className="sr-only">Email</label>
+                <input
+                    id="email"
+                    type="email"
+                    className="form-input"
+                    name="email"
+                    value={form.email}
+                    onChange={onChange}
+                    placeholder="name@exemple.com" 
+                    autoComplete="email"
+                    aria-label="User email"
                 />
 
                 <label htmlFor="tel" className="sr-only">Phone Number</label>

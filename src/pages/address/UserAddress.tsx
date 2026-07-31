@@ -3,12 +3,13 @@ import type { ChangeEvent, FC, SubmitEvent } from 'react'
 import { useNavigate, useLocation } from "react-router-dom"
 import axios from "axios"
 import { useGlobal } from "../../global/Context"
-import { BASE_URL } from "../../constants/url"
 import { Container } from "./styled"
 import { IoIosArrowBack } from 'react-icons/io'
 import { handleKeyPress } from "../../utils/inputsAndKeys"
+import { AppRoutes } from "../../routes/path"
 
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 interface FormData {
@@ -42,7 +43,7 @@ const UserAddress:FC = ()=>{
 
     useEffect(()=>{
         if(!token){
-            navigate('/', { replace: true })
+            navigate(AppRoutes.HOME, { replace: true })
         }else if(mode === 'update'){
             setForm({
                 street: user.street || '',
@@ -103,9 +104,9 @@ const UserAddress:FC = ()=>{
             
             alert(mode === 'create' ? "Address registered successfully!" : "Address updated successfully!")
             
-            if (mode === 'create') navigate('/', { replace: true })
-            else if (mode === 'update') navigate('/profile')
-            else navigate('/cart')
+            if (mode === 'create') navigate(AppRoutes.HOME, { replace: true })
+            else if (mode === 'update') navigate(AppRoutes.PROFILE)
+            else navigate(AppRoutes.CART)
             
         } catch (error: any) {
             const errMsg = error.response?.data?.message || error.response?.data || "An error occurred updating the address details."

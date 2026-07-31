@@ -2,7 +2,9 @@ import { createContext, useState, useContext, useCallback } from 'react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import type { User, Order } from '../types/types'
 import axios from 'axios'
-import { BASE_URL } from '../constants/url'
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 

@@ -5,6 +5,7 @@ import { AppRoutes } from '../../routes/path'
 import { userForm } from '../../hooks/useForm'
 import { authService } from '../../services/auth'
 import { handleKeyPress } from '../../utils/inputsAndKeys'
+import { useAuth } from '../../global/AuthContext'
 import { Container, PasswordFieldWrapper } from './styled'
 
 
@@ -12,6 +13,7 @@ import { Container, PasswordFieldWrapper } from './styled'
 
 const Signup:FC = ()=>{
     const navigate = useNavigate()
+    const { login } = useAuth()
     const [showPass, setShowPass] = useState<boolean>(false)
     const { form, onChange, clear } = userForm({
         name: '',
@@ -29,7 +31,7 @@ const Signup:FC = ()=>{
     }, [navigate])
 
 
-    const handleLoginSubmit = async(e:SubmitEvent<HTMLFormElement>):Promise<void>=>{
+    const handleSignupSubmit = async(e:SubmitEvent<HTMLFormElement>):Promise<void>=>{
         e.preventDefault()
 
         const body = {
@@ -40,10 +42,11 @@ const Signup:FC = ()=>{
         }
 
         try{
-            const data = await authService.signup(body)
+            const tokenData = await authService.signup(body)
+            login(tokenData)
 
-            localStorage.setItem('token', data)
-            //navigate(AppRoutes.HOME)
+            localStorage.setItem('token', tokenData)
+            navigate(AppRoutes.ADDRESS)
         }catch(e:any){
             const errorMessage = e?.response?.data?.message || e?.response?.data || e?.message
             alert(errorMessage)
@@ -56,7 +59,7 @@ const Signup:FC = ()=>{
     return(
         <Container>
             <div className="title">Register User</div>
-            <form onSubmit={handleLoginSubmit}>               
+            <form onSubmit={handleSignupSubmit}>               
                 <div className="input-container">
                     <label htmlFor="login-email" className="sr-only">Email</label>
                     <input
@@ -126,7 +129,7 @@ const Signup:FC = ()=>{
                     <button 
                         className="signup-button signup-button-exception"
                         type="button"
-                        onClick={() => navigate('/login')}
+                        onClick={() => navigate(AppRoutes.LOGIN, { state: { mode: 'create' } })}
                     >
                         Back to Lgin
                     </button>

@@ -2,12 +2,12 @@ import { type FC, type SubmitEvent, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AppRoutes } from '../../routes/path'
 import axios from 'axios'
-import { BASE_URL } from '../../constants/url'
 import { useNavigate } from 'react-router-dom'
 import { userForm } from '../../hooks/useForm'
 import { Container } from './styled'
 
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 

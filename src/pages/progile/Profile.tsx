@@ -4,6 +4,7 @@ import { useGlobal } from "../../global/Context"
 import { MdEdit } from "react-icons/md"
 import { AiOutlineLogout } from "react-icons/ai"
 import { FaListAlt } from "react-icons/fa";
+import { AppRoutes } from "../../routes/path"
 import Header from "../../components/Header"
 import { Container } from "./styled"
 import { formatPhoneNumber } from "../../utils/inputsAndKeys"
@@ -65,7 +66,7 @@ const Profile = ()=>{
                     </div>
                     <MdEdit 
                         className="icon" 
-                        onClick={() => navigate('/user-address', { state: { mode: 'update' } })}
+                        onClick={() => navigate(AppRoutes.PROFILE, { state: { mode: 'update' } })}
                     />
                 </div>    
             </Container>
