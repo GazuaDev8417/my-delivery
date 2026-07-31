@@ -4,19 +4,20 @@ import { useNavigate } from 'react-router-dom'
 import { AppRoutes } from '../../routes/path'
 import { userForm } from '../../hooks/useForm'
 import { authService } from '../../services/auth'
-import RequestPasswordReset from '../../components/requestPassword/RequestPasswordReset'
+import { handleKeyPress } from '../../utils/inputsAndKeys'
 import { Container, PasswordFieldWrapper } from './styled'
 
 
 
 
-const Login:FC = ()=>{
+const Signup:FC = ()=>{
     const navigate = useNavigate()
     const [showPass, setShowPass] = useState<boolean>(false)
-    const [isModalOpen, setIsModalOpen] = useState(false)
     const { form, onChange, clear } = userForm({
-        email: 'visitor@email.com',
-        password: '123456'
+        name: '',
+        email: '',
+        phone: '',
+        password: ''
     })
 
 
@@ -32,15 +33,17 @@ const Login:FC = ()=>{
         e.preventDefault()
 
         const body = {
+            name: form.name,
             email: form.email,
+            phone: form.phone,
             password: form.password
         }
 
         try{
-            const data = await authService.login(body)
+            const data = await authService.signup(body)
 
             localStorage.setItem('token', data)
-            navigate(AppRoutes.HOME)
+            //navigate(AppRoutes.HOME)
         }catch(e:any){
             const errorMessage = e?.response?.data?.message || e?.response?.data || e?.message
             alert(errorMessage)
@@ -48,13 +51,27 @@ const Login:FC = ()=>{
     }
 
 
+
+
     return(
         <Container>
-            <RequestPasswordReset isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-            <div className="title">Login</div>
+            <div className="title">Register User</div>
             <form onSubmit={handleLoginSubmit}>               
                 <div className="input-container">
                     <label htmlFor="login-email" className="sr-only">Email</label>
+                    <input
+                        id="login-email"
+                        type="text"
+                        className="form-input"
+                        name="name"
+                        value={form.name}
+                        onChange={onChange}
+                        placeholder="Your full name"
+                        aria-label="Customer name"
+                        autoFocus 
+                        required
+                        />
+
                     <input
                         id="login-email"
                         type="email"
@@ -64,7 +81,20 @@ const Login:FC = ()=>{
                         onChange={onChange}
                         placeholder="name@email.com"
                         aria-label="Endereço de email"
-                        autoFocus 
+                        required
+                        />
+
+                    <input
+                        id="login-email"
+                        type="text"
+                        className="form-input"
+                        name="phone"
+                        maxLength={11}
+                        onKeyDown={handleKeyPress}
+                        value={form.phone}
+                        onChange={onChange}
+                        placeholder="Phone number"
+                        aria-label="Customer telefone"
                         required
                         />
                     
@@ -89,17 +119,17 @@ const Login:FC = ()=>{
                     </PasswordFieldWrapper>
                 </div>
                 <div className="btn-container">
-                    {/* 4. Specified type="button" so this button won't submit the form */}
-                    <button className="login-button" type="button" onClick={clear}>Clear</button>
-                    <button className="login-button" type="submit">Enter</button>
-                </div>
-                <div className="bottom-container">
-                    <span
-                        style={{cursor:'pointer', color:'blue '}} 
-                        onClick={() => navigate(AppRoutes.SIGNUP)}>Signup</span>
-                    <span 
-                        style={{cursor:'pointer', color:'blue '}}
-                        onClick={() => setIsModalOpen(true)}>Forgot my password</span>
+                    <div className='submit-btn'>
+                        <button className="login-button" type="button" onClick={clear}>Clear</button>
+                        <button className="login-button" type="submit">Enter</button>
+                    </div>
+                    <button 
+                        className="signup-button signup-button-exception"
+                        type="button"
+                        onClick={() => navigate('/login')}
+                    >
+                        Back to Lgin
+                    </button>
                 </div>
             </form>
         </Container>
@@ -107,4 +137,4 @@ const Login:FC = ()=>{
 }
 
 
-export default Login
+export default Signup

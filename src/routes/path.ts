@@ -5,6 +5,7 @@ export const AppRoutes = {
     EDIT_PROFILE: '/edit-profile',
     ADDRESS: '/user-address',
     LOGIN: '/login',
+    SIGNUP: '/signup',
     RESET_PASSWORD: '/reset-request'
 } as const
 

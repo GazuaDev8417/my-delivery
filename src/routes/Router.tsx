@@ -10,6 +10,7 @@ const Detail = lazy(() => import('../pages/detail/Detail'))
 const Cart = lazy(() => import('../pages/cart/Cart'))
 const UserAddress = lazy(() => import('../pages/address/UserAddress'))
 const Login = lazy(() => import('../pages/login/Login'))
+const Signup = lazy(() => import('../pages/signup/Signup'))
 const ResetPassword = lazy(() => import('../pages/resetPassword/ResetPassword'))
 const Profile = lazy(() => import('../pages/progile/Profile'))
 const EditProfile = lazy(() => import('../pages/editProfile/EditProfile'))
@@ -25,6 +26,7 @@ const Router:FC = ()=>{
             <Routes>
                 <Route path={AppRoutes.HOME} element={<Detail/>}/>
                 <Route path={AppRoutes.LOGIN} element={<Login/>}/>
+                <Route path={AppRoutes.SIGNUP} element={<Signup/>}/>
                 <Route path={AppRoutes.RESET_PASSWORD} element={<ResetPassword/>}/>
 
 

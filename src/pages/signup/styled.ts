@@ -60,10 +60,11 @@ export const Container = styled.div`
 
     .btn-container {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: center;
-        width: 320px;
-        margin-left: 12px;
+        width: 100%;
+        margin-left: 10px;
+        gap: 10px;
     }
  
     .login-button {
@@ -87,6 +88,42 @@ export const Container = styled.div`
         box-shadow: 0 0 6px #000;
     }
 
+    .submit-btn {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .signup-button {
+        width: 100%;
+        padding: 0.75rem;
+        color: white;
+        background-color: #b11717; /* Defined clear default fallback background state */
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+
+        &:hover {
+            background-color: #990f0f;
+            box-shadow: 0 4px 8px rgba(153, 15, 15, 0.3);
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(177, 23, 23, 0.4);
+        }
+
+        &:active {
+            transform: scale(0.98); /* Native press effect feedback */
+        }
+    }
+
     p {
         margin-top: 2rem;
         font-size: .9rem;
@@ -100,15 +137,6 @@ export const Container = styled.div`
 
     a:hover {
         text-decoration: underline;
-    }
-
-    .bottom-container{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        margin-top: 30px;
-        margin-left: 10px;
     }
 
     /* MEDIA QUERY FOR WIDTH */
