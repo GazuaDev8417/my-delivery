@@ -1,4 +1,3 @@
-// src/App.tsx
 import type { FC } from "react"
 import { BrowserRouter } from "react-router-dom"
 import { GlobalStyle } from "./styles/GlobalStyle"

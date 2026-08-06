@@ -112,14 +112,12 @@ const Detail:FC = ()=>{
             return
         }
 
-        const now = new Date().toISOString()
         const body = {
             product: product.name, 
             price: product.price,
             photoUrl: product.photoUrl,
             quantity: 1,
             total: product.price,  
-            momentString: now,
             description: product.description,
             providerId: product.provider
         }

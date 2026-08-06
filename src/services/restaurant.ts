@@ -11,7 +11,7 @@ export const restaurantService = {
     },
 
     getProducts: async():Promise<Products[]>=>{
-        const response = await axios.get<Products[]>(`${BASE_URL}/restaurants/products`)
+        const response = await axios.get<Products[]>(`${BASE_URL}/restaurants/clientside-products`)
         return response.data
     },
 

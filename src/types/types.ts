@@ -10,22 +10,13 @@ export interface Restaurant{
 }
 
 export interface Products{
-    product:string
-    price:number
-    photoUrl:string
-    quantity:number
-    total:number
-    momentString:string
-    client:string
-    state:string
-    address:string
+    category:string
     description:string
+    id:string
+    name:string
+    photoUrl:string
+    price:number
     provider:string
-    
-    
-    
-    
-    
 }
 
 export interface User{
