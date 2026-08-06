@@ -120,7 +120,8 @@ const Detail:FC = ()=>{
             quantity: 1,
             total: product.price,  
             momentString: now,
-            description: product.description
+            description: product.description,
+            providerId: product.provider
         }
 
         try{
