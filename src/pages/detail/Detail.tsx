@@ -53,24 +53,11 @@ const Detail:FC = ()=>{
     useEffect(()=>{
         const loadPageData = async()=>{
             try{
-                const [restaurantData, productsData] = await Promise.allSettled([
-                    restaurantService.getRestaurant(),
-                    restaurantService.getProducts()
-                ])
-
-                if(restaurantData.status === 'fulfilled'){
-                    setRestaurant(restaurantData.value)
-                }else{
-                    const error = restaurantData.reason
-                    console.error(error?.response?.data?.message || error?.resonse?.data || error)
-                }
+                const restaurantData = await restaurantService.getRestaurant()
+                setRestaurant(restaurantData)
                 
-                if(productsData.status === 'fulfilled'){
-                    setProducts(productsData.value)
-                }else{
-                    const error = productsData.reason
-                    console.error(error?.response?.data?.message || error?.resonse?.data || error)
-                }
+                const productData = await restaurantService.getProducts(restaurantData.id)
+                setProducts(productData)
             }catch(e:any){
                 const errorMessage = e?.response?.data?.message || e?.response?.data
                 console.error(errorMessage)
