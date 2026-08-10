@@ -7,6 +7,7 @@ import { FaListAlt } from "react-icons/fa";
 import { AppRoutes } from "../../routes/path"
 import Header from "../../components/Header"
 import { Container } from "./styled"
+import { authService } from "../../services/auth"
 import { formatPhoneNumber } from "../../utils/inputsAndKeys"
 
 
@@ -34,6 +35,22 @@ const Profile = ()=>{
             navigate('/', { replace: true })
         }
     }
+
+
+    const handleDeleteAccount = async()=>{
+        const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.')
+        if(!confirmDelete) return
+
+        try{
+            await authService.deleteAccount()
+            localStorage.clear()
+            navigate('/', { replace: true })
+        }catch(e:any){
+            alert(e?.response?.data?.message || e?.response?.data || 'An error occurred while trying to delete your account.')
+        }
+    }       
+        
+
 
 
     return(
@@ -68,6 +85,15 @@ const Profile = ()=>{
                         className="icon" 
                         onClick={() => navigate(AppRoutes.PROFILE, { state: { mode: 'update' } })}
                     />
+                </div>
+
+                <div className="danger-zone">
+                    <button
+                        type="button"
+                        className="btn-delete-subtle"
+                        onClick={handleDeleteAccount}>
+                        Delete Account
+                    </button>
                 </div>    
             </Container>
         </>

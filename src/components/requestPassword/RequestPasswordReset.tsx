@@ -16,7 +16,7 @@ interface ModalProps{
 
 const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{
     const dialogRef = useRef<HTMLDialogElement>(null)
-    const { clear, onChange, form } = userForm({ email:'visitor@email.com' })
+    const { clear, onChange, form } = userForm({ email:'admin@example.com' })
 
 
 
@@ -81,6 +81,7 @@ const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{
         }catch(e:any){
             const errorMessage = e?.response?.data?.message || e?.response?.data || e?.message
             alert(errorMessage)
+            clear()
         }
     }
 

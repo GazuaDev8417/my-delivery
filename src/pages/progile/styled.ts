@@ -77,6 +77,41 @@ export const Container = styled.div`
         }
     }
 
+    .danger-zone {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px dashed #e0e0e0; /* Optional separator to isolate the action */
+        display: flex;
+        justify-content: center; /* Or flex-start if you prefer left-aligned */
+    }
+
+    .btn-delete-subtle {
+        background: transparent;
+        border: none;
+        color: #888888; /* Muted grey initially */
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            color: #b11717; /* Uses your primary red on hover */
+            background-color: rgba(177, 23, 23, 0.08); /* Very soft red tint */
+        }
+
+        &:active {
+            transform: scale(0.97);
+        }
+
+        &:focus-visible {
+            outline: 2px solid #b11717;
+            outline-offset: 2px;
+        }
+    }
+    
+
     /* MEDIA QUERIES */
     @media(max-width: 660px){
         h1 {

@@ -1,55 +1,41 @@
-# Delivery App (Customer-Facing) — Freelance Portfolio Project
+# 🛍️ My Delivery — Consumer Order & Checkout Portal
 
-A responsive full-stack web application for food and product delivery, built with React, TypeScript, and Styled Components. This repository represents the consumer/customer ecosystem, enabling users to browse dynamic, category-organized menus, manage their shopping cart locally, and process instant digital payments.
+[![Live Demo](https://img.shields.io/badge/Live_App-Try_It_Now-2ea44f?style=for-the-badge&logo=vercel)](https://my-delivery-silk.vercel.app)
+[![Portfolio](https://img.shields.io/badge/Author-Flamarion_França-007acc?style=for-the-badge&logo=render)](https://portfolio-vtu0.onrender.com)
 
-> 🌐 **Portfolio Note:** While this application is operationally tailored to the Brazilian delivery market (integrating systems like Pix and CEP-based addressing), **the source code, architecture, and interface were intentionally developed in English** to effectively demonstrate full-stack engineering proficiency to international recruiters.
-
----
-
-## 🚀 Key Features
-
-*   **Dynamic Menu Browsing (`Detail` Page):** Fetches establishment and product metadata concurrently using optimized parallel promises. Products are cleanly grouped by business category filters, utilizing memoized state selectors to prevent performance degradation caused by re-renders.
-*   **Reactive Cart Lifecycle (`Cart` Page):** Allows real-time quantity adjustments, enforcing a minimum limit of 1 item and instantly synchronizing updates with backend controllers via unified Axios wrappers.
-*   **Profile & Address Hub (`Profile` Page):** Manages essential user data, including phone number formatting and delivery logistics optimized for Brazilian postal codes (CEP), states, and neighborhoods.
-*   **Integrated Payment Gateways:**
-*   **Mercado Pago (Pix & Credit Card):** Seamlessly processes local card tokens or generates instant Pix QR codes, utilizing real-time background status polling. *   **WhatsApp Deep-Linking Security Mechanism:** Implements fallback logic for order confirmation, concatenating items and delivery addresses to forward text data directly to the merchant's WhatsApp channel (`+55`).
+> **Ecosystem Core:** *My Delivery* is the client-facing application of a 3-part micro-frontend architecture. It works synchronously with **[My Delivery Provider](https://my-delivery-provider.vercel.app)** (Operations Engine) and the **[SaaS Dashboard](https://dashboard-project-nu-one.vercel.app/)** (Business Intelligence Engine).
 
 ---
 
-## 🛠️ Architecture and Tech Stack
+## ⚡ Interactive Live Demo
+Experience the customer order pipeline directly in your browser:
+* 🌐 **Live Web Application:** [https://my-delivery-silk.vercel.app](https://my-delivery-silk.vercel.app)
+* 💼 **Developer Portfolio:** [https://portfolio-vtu0.onrender.com](https://portfolio-vtu0.onrender.com)
 
-*   **Frontend Library:** React (Functional Components with Hooks)
-*   **Type Safety:** TypeScript (Strictly typed schemas for `User`, `Order`, `Products`, and `Restaurant`)
-*   **State Architecture:** Context API using custom hooks (`useGlobal`) with memoized asynchronous routines (`useCallback`) to preserve reference stability.
-*   **Styling Engine:** Styled Components (CSS-in-JS layout structure)
-*   **HTTP Client:** Axios with centralized authorization interceptors, tracking Bearer tokens in the browser's `localStorage`.
-
----
-
-## 📂 Key Components and Data Flow Details
-
-### 1. Global State Hub (`Context.tsx`)
-Acts as the central engine. Restricts access to sensitive components via route authentication checks. Exposes requests that include the authentication token for:
-*   `GET /profile` — Populates active identity states.
-*   `GET /active` — Populates local state arrays for the shopping cart.
-
-### 2. Product Matrix (`Detail.tsx`)
-Renders category-organized listings. Incorporates a smart scroll anchor via `useRef` to smoothly guide users to search queries. Upon clicking, it immediately compiles order item data payloads:
-```typescript
-{
-    product: string,
-    price: number,
-    quantity: 1,
-    total: number,
-    momentString: string // ISO Timestamp
-}
-
-```
+> 💡 **Try this flow:** Open the app, explore category menus, add items to your cart, and simulate a real-time digital payment (Pix / Mercado Pago) or trigger a structured WhatsApp order payload.
 
 ---
 
-## 👨‍💻 Author
+## 🌟 Why Test This Application?
 
-Developed by **Flamarion França** \
-Portolio page: https://portfolio-vtu0.onrender.com \
-Application link: https://my-delivery-silk.vercel.app
+Built with **React**, **TypeScript**, and **Styled Components**, this client portal demonstrates enterprise-grade frontend engineering focused on high-speed user experience, strict type safety, and resilient checkout flows:
+
+* **⚡ Ultra-Fast Parallel Metadata Hydration:** Uses parallelized async routines (`Promise.all`) to fetch establishment settings and category listings simultaneously, dropping initial paint times.
+* **🛒 Zero-Lag Reactive Cart:** Implements custom React Hooks and memoized selectors (`useCallback`, `useMemo`) to prevent unnecessary UI re-renders during high-frequency cart updates.
+* **💳 Multi-Gateway Checkout Engine:** Integrated with **Mercado Pago API** for automated background payment polling (Pix QR codes and credit card tokenization) alongside a secure fallback **WhatsApp Deep-Linking Protocol**.
+* **📍 Brazilian Address Engine:** Built-in dynamic CEP validation and auto-fill logistics routines tailored to local Brazilian delivery standards.
+
+---
+
+## 🏗️ System Architecture & Data Flow
+
+```text
+   [ Customer App ]
+          │
+          ├── 1. Fetches Products & Stores ──► [ Centralized REST API ]
+          ├── 2. Cart & State Synchronization 
+          └── 3. Generates Payments ─────────► [ Mercado Pago / WhatsApp ]
+                                                         │
+                                                         ▼
+                                             [ My Delivery Provider ]
+                                             (Receives Live Orders)

@@ -14,5 +14,13 @@ export const authService = {
     signup: async(body:object):Promise<string>=>{
         const response = await axios.post<string>(`${BASE_URL}/users/signup`, body)
         return response.data
+    },
+
+    deleteAccount: async():Promise<void>=>{
+        await axios.delete(`${BASE_URL}/users/account`, {
+            headers: {
+                Authorization: localStorage.getItem('token')
+            }
+        })
     }
 }

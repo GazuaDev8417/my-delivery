@@ -50,6 +50,7 @@ const Detail:FC = ()=>{
 
 
 
+    
     useEffect(()=>{
         const loadPageData = async()=>{
             try{
@@ -206,7 +207,7 @@ const Detail:FC = ()=>{
                                                 <ProductCard key={product.id}>
                                                     <img
                                                         className="product-image" 
-                                                        src={product.photoUrl}
+                                                        src={`imgs/products/${product.photoUrl}`}
                                                         alt={product.name}
                                                     />
                                                     <div className="product-desc">
