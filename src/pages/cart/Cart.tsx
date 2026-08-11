@@ -252,7 +252,7 @@ const Cart:FC = ()=>{
                     {cart.length > 0 ? cart.map(item => (
                         <div className="card" key={item.id}>
                             <span>
-                                <img src={item.photoUrl} alt={item.product} />
+                                <img src={`imgs/products/${item.photoUrl}`} alt={item.product} />
                             </span>
                             <span>
                                 <div className="product-name">{item.product}</div>

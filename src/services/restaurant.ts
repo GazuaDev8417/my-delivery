@@ -5,8 +5,13 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
 
 
 export const restaurantService = {
-    getRestaurant: async():Promise<Restaurant>=>{
-        const response = await axios.get<Restaurant>(`${BASE_URL}/restaurants`)
+    getRestaurants: async():Promise<Restaurant[]>=>{
+        const response = await axios.get<Restaurant[]>(`${BASE_URL}/restaurants`)
+        return response.data
+    },
+
+    restaurantByCustomer: async(id:string):Promise<Restaurant>=>{
+        const response = await axios.get<Restaurant>(`${BASE_URL}/restaurants/restaurant/${id}`)
         return response.data
     },
 

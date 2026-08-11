@@ -1,5 +1,6 @@
 export const AppRoutes = {
     HOME: '/',
+    DETAIL: '/detail',
     CART: '/cart',
     PROFILE: '/profile', 
     EDIT_PROFILE: '/edit-profile',

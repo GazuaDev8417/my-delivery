@@ -6,6 +6,7 @@ import ProtectedRoutes from './ProtectedRoutes'
 
 
 
+const Home = lazy(() => import('../pages/home/Home'))
 const Detail = lazy(() => import('../pages/detail/Detail'))
 const Cart = lazy(() => import('../pages/cart/Cart'))
 const UserAddress = lazy(() => import('../pages/address/UserAddress'))
@@ -24,11 +25,13 @@ const Router:FC = ()=>{
     return(
         <Suspense fallback={<PageLoader/>}>
             <Routes>
-                <Route path={AppRoutes.HOME} element={<Detail/>}/>
+                <Route path={AppRoutes.HOME} element={<Home/>}/>
                 <Route path={AppRoutes.LOGIN} element={<Login/>}/>
                 <Route path={AppRoutes.SIGNUP} element={<Signup/>}/>
                 <Route path={AppRoutes.RESET_PASSWORD} element={<ResetPassword/>}/>
 
+                {/* THIS ROUTE ONLY CAN BE ACCESSED THROUGH THE PROVIDER ID */}
+                <Route path={AppRoutes.DETAIL} element={<Detail/>}/>
 
                 <Route 
                     path={AppRoutes.CART} 

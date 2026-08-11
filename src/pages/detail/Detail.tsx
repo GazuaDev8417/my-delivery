@@ -12,6 +12,7 @@ import Context,  { type GlobalStateContextType } from '../../global/Context'
 import Header from '../../components/Header'
 import { IoPersonOutline, IoCartOutline } from 'react-icons/io5'
 import { AiOutlineLogin } from "react-icons/ai"
+import { IoIosArrowBack } from 'react-icons/io'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import type { Products, Restaurant } from '../../types/types'
 import { Container, RestaurantCard, CategoriesBar, ProductCard } from './styled'
@@ -34,6 +35,7 @@ const Detail:FC = ()=>{
     const productsRef = useRef<HTMLDivElement | null>(null)
     const { getAllOrders } = useContext(Context) as GlobalStateContextType
     const token = localStorage.getItem('token')
+    const providerId = sessionStorage.getItem('providerId')
     const [restaurant, setRestaurant] = useState<Restaurant>({
         id: '',
         name: '',
@@ -53,8 +55,13 @@ const Detail:FC = ()=>{
     
     useEffect(()=>{
         const loadPageData = async()=>{
+            if(!providerId){
+                navigate(AppRoutes.HOME, { replace: true })
+                return
+            }
+
             try{
-                const restaurantData = await restaurantService.getRestaurant()
+                const restaurantData = await restaurantService.restaurantByCustomer(providerId)
                 setRestaurant(restaurantData)
                 
                 const productData = await restaurantService.getProducts(restaurantData.id)
@@ -149,12 +156,12 @@ const Detail:FC = ()=>{
                 leftIcon={
                     token ? (
                         <IoCartOutline className="header-icon" onClick={() => navigate(AppRoutes.CART)} />
-                    ) : <AiOutlineLogin className="header-icon" onClick={() => navigate(AppRoutes.LOGIN)} />
+                    ) : <IoIosArrowBack className="header-icon" onClick={() => navigate(AppRoutes.HOME)} />
                 }
                 rightIcon={
                     token ? (
                         <IoPersonOutline className="header-icon" onClick={() => navigate(AppRoutes.PROFILE)} />
-                    ) : <div/>
+                    ) : <AiOutlineLogin className="header-icon" onClick={() => navigate(AppRoutes.PROFILE)} />
                 }/>
 
                 <Container>
