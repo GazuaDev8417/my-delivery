@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect, useRef } from 'react'
+import NotificationMenu from './notificationMenu/NotificationMenu'
 import styled from 'styled-components'
 
 
@@ -20,6 +21,7 @@ interface HeaderProps{
 
 const Header = (props:HeaderProps)=>{
     const titleRef = useRef<HTMLDivElement>(null)
+    const token = localStorage.getItem('token')
 
 
     const hideHeaderCenter = (title:HTMLDivElement)=>{
@@ -42,7 +44,12 @@ const Header = (props:HeaderProps)=>{
     return(
         <Container>
             {props.leftIcon}
-            {props.rightIcon}
+            {token ? (
+                <div style={{ display:'flex', alignItems:'center', gap:50}}>
+                    <NotificationMenu/>
+                    {props.rightIcon}
+                </div>   
+            ) :  props.rightIcon }
         </Container>
     )
 }
