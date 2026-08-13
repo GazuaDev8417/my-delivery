@@ -22,14 +22,14 @@ export const notifificationService = {
     },
 
     updateNotification: async(id:string):Promise<void>=>{
-        const response = await axios.put(`${BASE_URL}/customers-notifications/update/${id}`, {
+        const response = await axios.put(`${BASE_URL}/customers-notifications/update/${id}`, {}, {
             headers: { Authorization: token }
         })
         return response.data
     },
 
     updateAllNotifications: async():Promise<void>=>{
-        const response = await axios.put(`${BASE_URL}/customers-notifications/update/all`, {
+        const response = await axios.put(`${BASE_URL}/customers-notifications/update/all`, {}, {
             headers: { Authorization: token }
         })
         return response.data

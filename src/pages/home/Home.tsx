@@ -1,11 +1,7 @@
 import {
-    type ChangeEvent,
     type FC,
-    useContext,
     useEffect,
-    useState,
-    useRef,
-    useMemo
+    useState
 } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { restaurantService } from '../../services/restaurant'
@@ -20,7 +16,7 @@ const Home:FC = ()=>{
     const [restaurants, setRestaurants] = useState<Restaurant[]>([])
 
 
-console.log('Restaurants',  restaurants)
+
     
     useEffect(()=>{
         const loadRestaurants = async()=>{

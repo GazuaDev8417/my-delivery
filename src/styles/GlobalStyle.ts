@@ -88,7 +88,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     .header-icon {
-        font-size: 2rem;
+        font-size: 1.5rem;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
         

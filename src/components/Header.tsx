@@ -45,7 +45,7 @@ const Header = (props:HeaderProps)=>{
         <Container>
             {props.leftIcon}
             {token ? (
-                <div style={{ display:'flex', alignItems:'center', gap:50}}>
+                <div style={{ display:'flex', alignItems:'center', gap:20}}>
                     <NotificationMenu/>
                     {props.rightIcon}
                 </div>   

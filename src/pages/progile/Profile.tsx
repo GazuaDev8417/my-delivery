@@ -1,9 +1,10 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useGlobal } from "../../global/Context"
+import { useAuth } from "../../global/AuthContext"
 import { MdEdit } from "react-icons/md"
 import { AiOutlineLogout } from "react-icons/ai"
-import { FaListAlt } from "react-icons/fa";
+import { FaListAlt } from "react-icons/fa"
 import { AppRoutes } from "../../routes/path"
 import Header from "../../components/Header"
 import { Container } from "./styled"
@@ -16,6 +17,7 @@ import { formatPhoneNumber } from "../../utils/inputsAndKeys"
 const Profile = ()=>{
     const navigate = useNavigate()
     const { user, getProfile } = useGlobal()
+    const { logout } = useAuth()
     const token = localStorage.getItem('token')
 
 
@@ -31,7 +33,7 @@ const Profile = ()=>{
     const handleLogout = ()=>{
         const confirmLogout = window.confirm('Are you sure you want to logout?')
         if(confirmLogout){
-            localStorage.clear()
+            logout()
             navigate('/', { replace: true })
         }
     }

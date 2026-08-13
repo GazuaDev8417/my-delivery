@@ -161,7 +161,7 @@ const Detail:FC = ()=>{
                 rightIcon={
                     token ? (
                         <IoPersonOutline className="header-icon" onClick={() => navigate(AppRoutes.PROFILE)} />
-                    ) : <AiOutlineLogin className="header-icon" onClick={() => navigate(AppRoutes.PROFILE)} />
+                    ) : <AiOutlineLogin className="header-icon" onClick={() => navigate(AppRoutes.LOGIN)} />
                 }/>
 
                 <Container>
@@ -179,7 +179,7 @@ const Detail:FC = ()=>{
                         <div className="desc">
                             <p>{restaurant.description}</p>
                         </div>
-                        <div className="products" title="Clique em uma das categorias abaixo">Menu</div>
+                        <div className="products" title="Click on the categories below">Products List</div>
                         
                         {/* Categories Navigation Bar */}
                         <CategoriesBar title="Clique para ver os produtos">

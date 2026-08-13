@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, type FC, type ReactNode } from "react"
+import { createContext, useContext, useState, type Dispatch, type FC, type ReactNode, type SetStateAction } from "react"
+import { type CustomerNotifications } from "../services/notifications"
 
 
 interface AuthContextType{
@@ -6,6 +7,8 @@ interface AuthContextType{
     setToken: (token:string | null) => void
     login: (token:string) => void
     logout: () => void
+    notifications:CustomerNotifications[]
+    setNotifications:Dispatch<SetStateAction<CustomerNotifications[]>>
 }
 
 
@@ -15,6 +18,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider:FC<{ children:ReactNode }> = ({ children })=>{
     const [token, setTokenState] = useState<string | null>(() => localStorage.getItem('token'))
+    const [notifications, setNotifications] = useState<CustomerNotifications[]>([])
 
     
     const login = (newToken:string)=>{
@@ -24,12 +28,14 @@ export const AuthProvider:FC<{ children:ReactNode }> = ({ children })=>{
 
 
     const logout = ()=>{
-        localStorage.removeItem('token')
+        localStorage.clear()
         setTokenState(null)
     }
 
     return(
-        <AuthContext.Provider value={{ token, setToken:setTokenState, login, logout}}>
+        <AuthContext.Provider value={{
+            token, setToken:setTokenState, login, logout, notifications, setNotifications
+        }}>
             { children }
         </AuthContext.Provider>
     )

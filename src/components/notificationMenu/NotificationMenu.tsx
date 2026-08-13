@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from "react"
-import { notifificationService, type CustomerNotifications } from "../../services/notifications"
+import { useGlobal } from "../../global/Context";
+import { notifificationService } from "../../services/notifications"
+import { useAuth } from "../../global/AuthContext";
 import {
     Container, 
     BtnStyle, 
@@ -30,22 +32,28 @@ const VITE_RESTAURANT_NOTIFICATION_URL = import.meta.env.VITE_RESTAURANT_NOTIFIC
 
 
 export default function NotificationMenu(){
+    const { user } = useGlobal()
+    const { notifications, setNotifications } = useAuth()
     const menuRef = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState<boolean>(false)
-    const [notifications, setNotifications] = useState<CustomerNotifications[]>([])
     
-console.log(notifications)
+    
+
 
     useEffect(()=>{
-        async function loadNotifications(){
-            try{
-                const data = await notifificationService.getNofifications()
-                setNotifications(data)
-            }catch(e:any){
-                console.error(e?.response?.data?.message || e?.response?.data || e?.message)
+        if(user?.id){
+            async function loadNotifications(){
+                try{
+                    const data = await notifificationService.getNofifications()
+                    setNotifications(data)
+                }catch(e:any){
+                    console.error(e?.response?.data?.message || e?.response?.data || e?.message)
+                }
             }
+            loadNotifications()
+        }else{
+            setNotifications([])
         }
-        loadNotifications()
     }, [])
 
 
@@ -126,11 +134,11 @@ console.log(notifications)
                     onClick={() => setOpen((prev) => !prev)}>
                     {unreadCount > 0 ? (
                         <>
-                            <FaBell size={22}/>
+                            <FaBell className="header-icon"/>
                             <NotificationDot/>
                         </>
                     ) : (
-                        <FaRegBell size={25}/>
+                        <FaRegBell className="header-icon"/>
                     )}
                 </BtnStyle>
 
