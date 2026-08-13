@@ -73,7 +73,7 @@ const Detail:FC = ()=>{
         }
 
         loadPageData()
-    }, [])
+    }, [providerId])
 
 
     useEffect(()=>{

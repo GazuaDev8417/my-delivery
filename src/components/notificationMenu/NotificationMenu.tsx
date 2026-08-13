@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { useGlobal } from "../../global/Context";
+import { useNavigate } from "react-router-dom";
 import { notifificationService } from "../../services/notifications"
 import { useAuth } from "../../global/AuthContext";
 import {
@@ -28,32 +28,26 @@ interface NotificationItemProps{
     onClick: () => void
 }
 
-const VITE_RESTAURANT_NOTIFICATION_URL = import.meta.env.VITE_RESTAURANT_NOTIFICATION_URL
 
 
 export default function NotificationMenu(){
-    const { user } = useGlobal()
+    const navigate = useNavigate()
     const { notifications, setNotifications } = useAuth()
     const menuRef = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState<boolean>(false)
     
     
 
-
     useEffect(()=>{
-        if(user?.id){
-            async function loadNotifications(){
-                try{
-                    const data = await notifificationService.getNofifications()
-                    setNotifications(data)
-                }catch(e:any){
-                    console.error(e?.response?.data?.message || e?.response?.data || e?.message)
-                }
+        async function loadNotifications(){
+            try{
+                const data = await notifificationService.getNofifications()
+                setNotifications(data)
+            }catch(e:any){
+                console.error(e?.response?.data?.message || e?.response?.data || e?.message)
             }
-            loadNotifications()
-        }else{
-            setNotifications([])
         }
+        loadNotifications()
     }, [])
 
 
@@ -84,7 +78,7 @@ export default function NotificationMenu(){
     }, [])
 
 
-    async function handleNotificationClick(id:string, message:string){
+    async function handleNotificationClick(id:string, message:string, provider:string){
         try{
             await notifificationService.updateNotification(id)
 
@@ -96,8 +90,18 @@ export default function NotificationMenu(){
                 )
             )
 
-            if(message.startsWith('An order for') ||  message.startsWith('New order placed')){
-                window.open(VITE_RESTAURANT_NOTIFICATION_URL, '_blank')
+            if(message.includes('is now on My Delivery!') ||  message.includes('deleted its account')){
+                navigate('/')
+            }
+
+            if(
+                message.includes('added to') 
+                ||  message.includes('is running low') 
+                ||  message.includes('has increased')
+                ||  message.includes('was removed from')
+            ){
+                navigate(`/detail`)
+                sessionStorage.setItem('providerId', provider)
             }
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e?.message)
@@ -159,7 +163,11 @@ export default function NotificationMenu(){
                                 title={notification.notification}
                                 time={notification.created_at}
                                 unread={!notification.is_read}
-                                onClick={() => handleNotificationClick(notification.id, notification.notification)}/>
+                                onClick={() => handleNotificationClick(
+                                    notification.id, 
+                                    notification.notification,
+                                    notification.provider
+                                )}/>
                             ))
                         ) : (
                             <div className="no-notification-container">

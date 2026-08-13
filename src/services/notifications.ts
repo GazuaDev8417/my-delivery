@@ -8,6 +8,7 @@ export interface CustomerNotifications{
     notification:string
     is_read:boolean
     created_at:string
+    provider:string
 }
 
 
