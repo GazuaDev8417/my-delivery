@@ -189,7 +189,6 @@ const Cart:FC = ()=>{
             }, 5000)
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e?.message)
-            alert(e?.response?.data?.message || 'Failed to initialize payment workflow.')
         }finally{
             setIsProcessing(false)
         }

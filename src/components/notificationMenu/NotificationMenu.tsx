@@ -90,7 +90,7 @@ export default function NotificationMenu(){
                 )
             )
 
-            if(message.includes('is now on My Delivery!') ||  message.includes('deleted its account')){
+            if(message.includes('deleted its account')){
                 navigate('/')
             }
 
@@ -99,6 +99,7 @@ export default function NotificationMenu(){
                 ||  message.includes('is running low') 
                 ||  message.includes('has increased')
                 ||  message.includes('was removed from')
+                ||  message.includes('is now on My Delivery!')
             ){
                 navigate(`/detail`)
                 sessionStorage.setItem('providerId', provider)

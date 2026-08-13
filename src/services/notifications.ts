@@ -12,26 +12,26 @@ export interface CustomerNotifications{
 }
 
 
-const token = localStorage.getItem('token')
+
 
 export const notifificationService = {
     getNofifications: async():Promise<CustomerNotifications[]>=>{
         const response = await axios.get<CustomerNotifications[]>(`${BASE_URL}/customers-notifications`, {
-            headers: { Authorization: token }
+            headers: { Authorization: localStorage.getItem('token') }
         })
         return response.data
     },
 
     updateNotification: async(id:string):Promise<void>=>{
         const response = await axios.put(`${BASE_URL}/customers-notifications/update/${id}`, {}, {
-            headers: { Authorization: token }
+            headers: { Authorization: localStorage.getItem('token') }
         })
         return response.data
     },
 
     updateAllNotifications: async():Promise<void>=>{
         const response = await axios.put(`${BASE_URL}/customers-notifications/update/all`, {}, {
-            headers: { Authorization: token }
+            headers: { Authorization: localStorage.getItem('token') }
         })
         return response.data
     }
