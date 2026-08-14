@@ -6,17 +6,17 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
 
 export const restaurantService = {
     getRestaurants: async():Promise<Restaurant[]>=>{
-        const response = await axios.get<Restaurant[]>(`${BASE_URL}/restaurants`)
+        const response = await axios.get<Restaurant[]>(`${BASE_URL}/providers`)
         return response.data
     },
 
     restaurantByCustomer: async(id:string):Promise<Restaurant>=>{
-        const response = await axios.get<Restaurant>(`${BASE_URL}/restaurants/restaurant/${id}`)
+        const response = await axios.get<Restaurant>(`${BASE_URL}/providers/restaurant/${id}`)
         return response.data
     },
 
     getProducts: async(providerId:string):Promise<Products[]>=>{
-        const response = await axios.get<Products[]>(`${BASE_URL}/restaurants/clientside-products/${providerId}`)
+        const response = await axios.get<Products[]>(`${BASE_URL}/providers/clientside-products/${providerId}`)
         return response.data
     },
 
