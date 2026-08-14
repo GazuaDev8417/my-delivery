@@ -165,8 +165,8 @@ export const ProductCard = styled.div`
 
     .product-image {
         border-radius: 10px;
-        max-width: 120px;
-        height: auto;
+        width: 90px;
+        height: 90px;
         object-fit: cover;
     }
 

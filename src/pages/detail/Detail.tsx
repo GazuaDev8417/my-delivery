@@ -220,7 +220,7 @@ const Detail:FC = ()=>{
                                                     <div className="product-desc">
                                                         <h4>{product.name}</h4><br/>
                                                         {product.description}<br/><br/>
-                                                        <div>R$ {Number(product.price).toFixed(2)}</div>
+                                                        <div><b>R$ {Number(product.price).toFixed(2)}</b></div>
                                                     </div>
                                                     <button 
                                                         className="btn-primary"
