@@ -8,7 +8,7 @@ import { FaListAlt } from "react-icons/fa"
 import { AppRoutes } from "../../routes/path"
 import Header from "../../components/Header"
 import { Container } from "./styled"
-import { authService } from "../../services/auth"
+//import { authService } from "../../services/auth"
 import { formatPhoneNumber } from "../../utils/inputsAndKeys"
 
 
@@ -39,18 +39,18 @@ const Profile = ()=>{
     }
 
 
-    const handleDeleteAccount = async()=>{
-        const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.')
-        if(!confirmDelete) return
+    // const handleDeleteAccount = async()=>{
+    //     const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.')
+    //     if(!confirmDelete) return
 
-        try{
-            await authService.deleteAccount()
-            localStorage.clear()
-            navigate('/', { replace: true })
-        }catch(e:any){
-            alert(e?.response?.data?.message || e?.response?.data || 'An error occurred while trying to delete your account.')
-        }
-    }       
+    //     try{
+    //         await authService.deleteAccount()
+    //         localStorage.clear()
+    //         navigate('/', { replace: true })
+    //     }catch(e:any){
+    //         alert(e?.response?.data?.message || e?.response?.data || 'An error occurred while trying to delete your account.')
+    //     }
+    // }       
         
 
 
@@ -89,14 +89,14 @@ const Profile = ()=>{
                     />
                 </div>
 
-                <div className="danger-zone">
+                {/*<div className="danger-zone">
                     <button
                         type="button"
                         className="btn-delete-subtle"
                         onClick={handleDeleteAccount}>
                         Delete Account
                     </button>
-                </div>    
+                </div>*/}    
             </Container>
         </>
     )    
