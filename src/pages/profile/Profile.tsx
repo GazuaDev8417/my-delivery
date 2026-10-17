@@ -84,7 +84,7 @@ const Profile = ()=>{
                     </div>
                     <MdEdit 
                         className="icon" 
-                        onClick={() => navigate(AppRoutes.PROFILE, { state: { mode: 'update' } })}
+                        onClick={() => navigate(AppRoutes.ADDRESS, { state: { mode: 'update' } })}
                     />
                 </div>
 

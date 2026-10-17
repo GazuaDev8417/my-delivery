@@ -13,7 +13,7 @@ const UserAddress = lazy(() => import('../pages/address/UserAddress'))
 const Login = lazy(() => import('../pages/login/Login'))
 const Signup = lazy(() => import('../pages/signup/Signup'))
 const ResetPassword = lazy(() => import('../pages/resetPassword/ResetPassword'))
-const Profile = lazy(() => import('../pages/progile/Profile'))
+const Profile = lazy(() => import('../pages/profile/Profile'))
 const EditProfile = lazy(() => import('../pages/editProfile/EditProfile'))
 
 
