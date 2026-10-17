@@ -96,14 +96,14 @@ const Login:FC = ()=>{
                     <button className="login-button" type="button" onClick={clear}>Clear</button>
                     <button className="login-button" type="submit">Enter</button>
                 </div>
-                {/* <div className="bottom-container">
+                <div className="bottom-container">
                     <span
                         style={{cursor:'pointer', color:'blue '}} 
                         onClick={() => navigate(AppRoutes.SIGNUP)}>Signup</span>
                     <span 
                         style={{cursor:'pointer', color:'blue '}}
                         onClick={() => setIsModalOpen(true)}>Forgot my password</span>
-                </div> */}
+                </div>
             </form>
         </Container>
     )
