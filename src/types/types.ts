@@ -17,6 +17,7 @@ export interface Products{
     photoUrl:string
     price:number
     provider:string
+    productId:string
 }
 
 export interface User{
@@ -46,4 +47,5 @@ export interface Order{
     address:string
     description:string
     paymentmethod:string
+    provider:string
 }

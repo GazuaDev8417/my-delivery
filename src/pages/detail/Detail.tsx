@@ -114,7 +114,8 @@ const Detail:FC = ()=>{
             quantity: 1,
             total: product.price,  
             description: product.description,
-            providerId: product.provider
+            providerId: product.provider,
+            productId: product.id
         }
 
         try{

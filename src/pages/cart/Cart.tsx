@@ -8,7 +8,8 @@ import { MdEdit } from 'react-icons/md'
 import Header from "../../components/Header"
 import MpModal from "../../components/MpModal" // Restored target modal
 import { Container } from "./styled"
-import type { Order } from "../../types/types"
+import { restaurantService } from "../../services/restaurant"
+import type { Order, Restaurant } from "../../types/types"
 import { initMercadoPago } from "@mercadopago/sdk-react"
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
@@ -45,10 +46,45 @@ const Cart:FC = ()=>{
     const [qrCodeBase64, setQrCodeBase64] = useState<string | null>(null)
     const [qrCodeLink, setQrCodeLink] = useState<string | null>(null)
     const [method, setMethod] = useState<'pix' | 'boleto' | 'card' | null>(null)
-    
+    const [restaurants, setRestaurants] = useState<Restaurant[]>([])
+    const [selectedProviderId, setSelectedProviderId] = useState<string>('')
+
     const hasQrCode = !!(qrCode || qrCodeBase64 || qrCodeLink)
     const pollingIntervalRef = useRef<ReturnType<typeof setInterval>>(null)
 
+
+
+    const providerIdsKey = [...new Set(cart.map(item => item.provider))].join(',')
+
+    useEffect(()=>{
+        const providerIds = providerIdsKey ? providerIdsKey.split(',') : []
+        let cancelled = false
+
+        if(providerIds.length === 0){
+            setRestaurants([])
+            setSelectedProviderId('')
+            return
+        }
+
+        Promise.all(
+            providerIds.map(id => restaurantService.restaurantByCustomer(id))
+        )
+            .then(data =>{
+                if(cancelled) return
+
+                setRestaurants(data)
+                setSelectedProviderId(current =>
+                    providerIds.includes(current) ? current : providerIds[0]
+                )
+            })
+            .catch(error =>{
+                if(!cancelled) console.error('Falha ao buscar estabelecimentos: ', error)
+            })
+
+        return () =>{
+            cancelled = true
+        }
+    }, [providerIdsKey])
 
 
     // Authenticated Guard Verification Lifecycle
@@ -103,8 +139,18 @@ const Cart:FC = ()=>{
             cartRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
     }, [hasQrCode, cart.length])
-    
-    
+
+
+
+    const selectedOrders = cart.filter(
+        item => item.provider === selectedProviderId
+    )  
+
+    const selectedRestaurant = restaurants.find(
+        restaurant => restaurant.id === selectedProviderId
+    )
+
+    const selectedTotal = calculateTotal(selectedOrders)
 
 
     const handleQuantityChange = async(e:ChangeEvent<HTMLInputElement>, id:string)=>{
@@ -123,9 +169,8 @@ const Cart:FC = ()=>{
 
 
     const removeItem = async(id:string)=>{
-        const config = { headers: { Authorization: token }}
         try{
-            await axios.delete(`${BASE_URL}/orders/${id}`, config)
+            await axios.delete(`${BASE_URL}/orders/${id}`)
             setCart(prev => prev.filter(order => order.id !== id))
             getAllOrders()
             handlePixPayment()
@@ -196,7 +241,7 @@ const Cart:FC = ()=>{
 
 
     const handlePaymentCard = () => {
-        setQrCode(null)
+       setQrCode(null)
         setQrCodeBase64(null)
         setQrCodeLink(null)
         setMethod('card')
@@ -205,17 +250,22 @@ const Cart:FC = ()=>{
 
 
     const notifyViaWhatsApp = ()=>{
-        if(cart.length === 0) return
+        if(!selectedRestaurant || selectedOrders.length === 0) return
 
-        const orderDetails = cart.map(item=>
-            `${item.quantity} x ${item.product} - $${Number(item.price).toFixed(2)} each\nSubtotal: $${(Number(item.price) * item.quantity).toFixed(2)}\n`
+        const orderDetails = selectedOrders.map(item=>
+            `${item.quantity} x ${item.product} - $${Number(item.price).toFixed(2)}`
         ).join('\n')
 
-        const totalMessage = `Grand Total: $${Number(total).toFixed(2)}`
-        const fullSummary = `New Order Request:\n\n${orderDetails}\n${totalMessage}\n\nDelivery Address Details:\nStreet: ${address}, ${number}\nPostal Code: ${cep}\nRegion: ${local}\nRef: ${reference.trim()}\nContact Name: ${talkTo}`
-        
-        const whatsAppUrl = `https://wa.me/5571983923747?text=${encodeURIComponent(fullSummary)}`
-        window.open(whatsAppUrl, '_blank')
+        const message =
+            `Pedido para ${selectedRestaurant.name}:\n\n${orderDetails}\n\n` +
+            `Total: R$ ${selectedTotal.toFixed(2)}\n\n` +
+            `Endereço: ${address}, ${number}\nCEP: ${cep}\nBairro: ${local}\n` +
+            `Referência: ${reference.trim()}\nContato: ${talkTo}`
+
+        window.open(
+            `https://wa.me/${selectedRestaurant.phone}?text=${encodeURIComponent(message)}`,
+            "_blank"
+        )
     }
 
 
@@ -233,22 +283,35 @@ const Cart:FC = ()=>{
                 
                 <div className="address-section">
                     <div>
-                        <b>Delivery Address</b>: {address ? `${address}, ${number}` : 'No address set'}<br />
-                        <b>Postal Code (CEP)</b>: {cep}<br />
-                        <b>Region</b>: {local}<br />
-                        <b>Reference Point</b>: {reference || 'N/A'}<br />
-                        <b>Contact recipient</b>: {talkTo}
+                        <b>Delivery address</b>: {address ? `${address}, ${number}` : 'No address set'}<br />
+                        <b>Postal Code</b>: {cep}<br />
+                        <b>Neighborhood</b>: {local}<br />
+                        <b>Reference point</b>: {reference || 'N/A'}<br />
+                        <b>Talk to</b>: {talkTo}
                     </div>
                     <MdEdit className="icon" onClick={() => navigate('/user-address', { state: { mode: 'cart' } })} />
                 </div>
 
                 <div className="addressAndName">
-                    <div className="rest-name">Your Selected Products</div>
+                    <div className="rest-name">Your Products</div>
+                    <div style={{marginTop:10, textAlign:'center'}}>Grand Total: R$ {Number(total).toFixed(2)}</div>
                 </div>
                 <hr style={{ width: '100%', marginBottom: '15px', backgroundColor: 'lightgray', border: 'none', height: '1px' }} />
 
+                <div className="restaurants-container">
+                    {restaurants.map(restaurant => (
+                        <button
+                            className="restaurant-button"
+                            key={restaurant.id}
+                            onClick={() => setSelectedProviderId(restaurant.id)}
+                        >
+                            {restaurant.name}
+                        </button>
+                    ))}
+                </div>
+
                 <div className="cart-container" ref={cartRef}>
-                    {cart.length > 0 ? cart.map(item => (
+                    {selectedOrders.length > 0 ? selectedOrders.map(item => (
                         <div className="card" key={item.id}>
                             <span>
                                 <img src={`imgs/products/${item.photoUrl}`} alt={item.product} />
@@ -257,8 +320,8 @@ const Cart:FC = ()=>{
                                 <div className="product-name">{item.product}</div>
                                 <div className="product-details">
                                     <b>Quantity: </b>{item.quantity} <br />
-                                    <b>Unit Price: </b>$ {Number(item.price).toFixed(2)} <br />
-                                    <b>Total: </b>$ {(Number(item.price) * Number(item.quantity)).toFixed(2)} <br />
+                                    <b>Price: </b>R$ {Number(item.price).toFixed(2)} <br />
+                                    <b>Total: </b>R$ {(Number(item.price) * Number(item.quantity)).toFixed(2)} <br />
                                 </div>
                             </span>
                             <div className="btn-container">
@@ -283,7 +346,7 @@ const Cart:FC = ()=>{
                 {/* Render Pix Instant QR Output Layout Block */}
                 {method === 'pix' && hasQrCode && (
                     <div ref={qrCodeRef} className="payment-gateway-pix-box" style={{ marginTop: '2rem', textAlign: 'center' }}>
-                        <h3>Scan QR Code to complete payment:</h3>
+                        <h3>Escaneie o QR Code para concluir o pagamento:</h3>
                         {qrCodeBase64 ? (
                             <img width='220' src={`data:image/png;base64,${qrCodeBase64}`} alt="Instant Pix QR Code" style={{ margin: '15px auto' }} />
                         ) : qrCode ? (
@@ -308,11 +371,11 @@ const Cart:FC = ()=>{
 
                 {cart.length > 0 && (
                     <div className="total-container">
-                        <div className="totalByGroup"><b>Total Summary</b>: $ {Number(total).toFixed(2)}</div>
+                        <div className="totalByGroup"><b>Establishment total</b>: R$ {selectedTotal.toFixed(2)}</div>
                         
-                        <div className="payment-action-hub" style={{ display: 'flex', gap: '1rem', margin: '15px 0', width: '100%', maxWidth: '340px' }}>
+                        <div className="payment-action-hub" style={{ display: 'flex', gap: '1rem', width: '100%' }}>
                             <button 
-                                className="address-button checkout-pay-btn" 
+                                className="address-button" 
                                 onClick={handlePixPayment} 
                                 disabled={isProcessing}
                                 style={{ flex: 1, padding: '10px', cursor: 'pointer', backgroundColor: '#00bfa5', color: 'white', border: 'none', borderRadius: '6px' }}
@@ -321,31 +384,31 @@ const Cart:FC = ()=>{
                             </button>
 
                             <button 
-                                className="address-button checkout-pay-btn" 
+                                className="requestOrder-btn"
+                                style={{
+                                    width: '100%',
+                                    maxWidth: '340px',
+                                    padding: '12px',
+                                    fontWeight: 600,
+                                    borderRadius: '8px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: 'white',
+                                    backgroundColor: '#25D366' // Standard WhatsApp brand color theme
+                                }}
+                                onClick={notifyViaWhatsApp}
+                            >
+                                Notify via WhatsApp
+                            </button>  
+
+                            <button 
+                                className="address-button" 
                                 onClick={handlePaymentCard}
                                 style={{ flex: 1, padding: '10px', cursor: 'pointer', backgroundColor: '#2979ff', color: 'white', border: 'none', borderRadius: '6px' }}
                             >
                                 Credit Card
                             </button>
                         </div>
-
-                        <button 
-                            className="requestOrder-btn"
-                            style={{
-                                width: '100%',
-                                maxWidth: '340px',
-                                padding: '12px',
-                                fontWeight: 600,
-                                borderRadius: '8px',
-                                border: 'none',
-                                cursor: 'pointer',
-                                color: 'white',
-                                backgroundColor: '#25D366' // Standard WhatsApp brand color theme
-                            }}
-                            onClick={notifyViaWhatsApp}
-                        >
-                            Notify Seller via WhatsApp
-                        </button>                                                     
                     </div>
                 )}
             </Container>

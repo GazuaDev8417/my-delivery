@@ -18,7 +18,7 @@ export const Container = styled.div`
 
     .title {
         font-size: 2rem;
-        margin-bottom: .3rem;
+        margin-bottom: 2rem;
         font-weight: 500;
         color: #333;
         text-align: center;

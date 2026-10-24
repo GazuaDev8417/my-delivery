@@ -48,6 +48,62 @@ export const Container = styled.div`
         margin: 1rem 0 0.5rem;
     }
 
+    .restaurants-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        overflow-x: auto;
+        padding: 5px;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            scrollbar-width: auto;
+
+            &::-webkit-scrollbar {
+                display: block;
+                height: 8px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 4px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+        }
+    }
+
+    .restaurant-button {
+        background: #fff;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 8px 16px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &[aria-pressed='true'] {
+            border-color: #b11717;
+            color: #b11717;
+            font-weight: 600;
+        }
+    }
+
     .rest-name {
         text-align: center;
         font-size: 1.4rem;
@@ -62,7 +118,7 @@ export const Container = styled.div`
         flex-direction: column;
         gap: 1rem;
         margin-top: 0.5rem;
-        max-height: 40vh; /* Limits height to prevent pushing past the viewport */
+        max-height: 60vh; /* Limits height to prevent pushing past the viewport */
         overflow-y: auto; /* Enables vertical scrolling inside the list */
         padding-right: 5px; /* Spacing for the scrollbar */
 
@@ -178,17 +234,28 @@ export const Container = styled.div`
     }
 
     .totalByGroup {
-        font-size: 1.3rem;
-        font-weight: 700;
+        text-align: center;
+        font-size: 1rem;
         color: #222;
+        margin-bottom: 10px;
+
+        .cart-total {
+            margin-top: 0.25rem;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #666;
+        }
     }
 
     .payment-action-hub {
+        display: flex;
+        align-items: center;
         width: 100%;
-        max-width: 480px;
+        max-width: 680px;
     }
 
     .requestOrder-btn {
+        margin-top: 0;
         width: 100%;
         max-width: 480px;
     }
