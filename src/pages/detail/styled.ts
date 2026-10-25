@@ -17,6 +17,44 @@ export const Container = styled.div`
     }
 `
 
+export const NavigationMenu = styled.div`
+    position: relative;
+
+    .menu-trigger {
+        border: 0;
+        padding: 0;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    nav {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        min-width: 150px;
+        padding: 6px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+    }
+
+    nav button {
+        padding: 10px 12px;
+        border: 0;
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    nav button:hover {
+        background: #f2f2f2;
+    }
+`
+
 // 2. Clear separation for the main restaurant layout card
 export const RestaurantCard = styled.div`
     display: flex;

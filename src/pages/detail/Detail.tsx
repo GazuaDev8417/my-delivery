@@ -10,12 +10,12 @@ import {
 import { useNavigate } from 'react-router-dom'
 import Context,  { type GlobalStateContextType } from '../../global/Context'
 import Header from '../../components/Header'
-import { IoPersonOutline, IoCartOutline } from 'react-icons/io5'
+import { IoPersonOutline, IoMenuOutline } from 'react-icons/io5'
 import { AiOutlineLogin } from "react-icons/ai"
 import { IoIosArrowBack } from 'react-icons/io'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import type { Products, Restaurant } from '../../types/types'
-import { Container, RestaurantCard, CategoriesBar, ProductCard } from './styled'
+import { Container, RestaurantCard, CategoriesBar, ProductCard, NavigationMenu } from './styled'
 import { AppRoutes } from '../../routes/path'
 import { restaurantService } from '../../services/restaurant'
 
@@ -36,6 +36,7 @@ const Detail:FC = ()=>{
     const { getAllOrders } = useContext(Context) as GlobalStateContextType
     const token = localStorage.getItem('token')
     const providerId = sessionStorage.getItem('providerId')
+    const [isNavigationOpen, setIsNavigationOpen] = useState<boolean>(false)
     const [restaurant, setRestaurant] = useState<Restaurant>({
         id: '',
         name: '',
@@ -156,7 +157,41 @@ const Detail:FC = ()=>{
             <Header
                 leftIcon={
                     token ? (
-                        <IoCartOutline className="header-icon" onClick={() => navigate(AppRoutes.CART)} />
+                        <NavigationMenu>
+                            <button
+                                type='button'
+                                className='menu-trigger'
+                                aria-label='Open Navigation options'
+                                aria-expanded={isNavigationOpen}
+                                aria-controls='detail-navigation'
+                                onClick={() => setIsNavigationOpen((isOpen) => !isOpen)}
+                            >
+                                <IoMenuOutline className='header-icon'/>
+                            </button>
+                            {isNavigationOpen && (
+                                <nav id="detail-navigation" aria-label='Screen navigation'>
+                                    <button
+                                        type='button'
+                                        onClick={()=>{
+                                            setIsNavigationOpen(false)
+                                            navigate(AppRoutes.HOME)
+                                        }}
+                                    >
+                                        Home
+                                    </button>
+
+                                    <button
+                                        type='button'
+                                        onClick={()=>{
+                                            setIsNavigationOpen(false)
+                                            navigate(AppRoutes.CART)
+                                        }}
+                                    >
+                                        Shopping Cart
+                                    </button>
+                                </nav>
+                            )}
+                        </NavigationMenu>
                     ) : <IoIosArrowBack className="header-icon" onClick={() => navigate(AppRoutes.HOME)} />
                 }
                 rightIcon={
