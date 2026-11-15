@@ -16,7 +16,7 @@ interface ModalProps{
 
 const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{
     const dialogRef = useRef<HTMLDialogElement>(null)
-    const { clear, onChange, form } = userForm({ email:'admin@example.com' })
+    const { clear, onChange, form } = userForm({ email:'visitor1@email.com' })
 
 
 
@@ -110,7 +110,8 @@ const RequestPasswordReset = ({ isOpen, onClose }:ModalProps)=>{
                             onChange={onChange}
                             placeholder="name@email.com"
                             aria-label="Endereço de email"
-                            autoFocus 
+                            autoFocus
+                            autoComplete="off" 
                             required
                             />
                     </div>
