@@ -206,7 +206,11 @@ const Cart:FC = ()=>{
                     quantity: item.quantity,
                     unit_price: Number(item.price)
                 }))
-            })
+            },
+            {
+                headers: { Authorization: token || '' }
+            }
+        )
 
             setStatus(response.data.status || 'pending')
             setQrCode(response.data.qrCode || null)
@@ -219,7 +223,11 @@ const Cart:FC = ()=>{
             // Safe stateful background interval polling instance
             pollingIntervalRef.current = setInterval(async()=>{
                 try{
-                    const statusRes = await fetch(`${BASE_URL}/orders/payment/${orderId}/status`)
+                    const statusRes = await fetch(`${BASE_URL}/orders/payment/${orderId}/status`,
+                        {
+                            headers: { Authorization: token || '' }
+                        }
+                    )
                     const statusData = await statusRes.json()
 
                     if(statusData.status === 'approved'){
