@@ -181,14 +181,7 @@ const Cart:FC = ()=>{
 
 
     const clearCartOnSuccess = async()=>{
-        const config = { headers: { Authorization: token }}
-        try{
-            await axios.patch(`${BASE_URL}/finish_orders`, {}, config)
-            getAllOrders()
-            setCart([])
-        }catch(e:any){
-            console.error(e?.response?.data?.message || e?.response?.data || e?.message)
-        }
+        await getAllOrders()
     }
 
 
@@ -217,7 +210,7 @@ const Cart:FC = ()=>{
             setQrCodeBase64(response.data.qrCodeBase64 || null)
             setQrCodeLink(response.data.qrCodeLink || null)
 
-            const orderId = response.data.id
+            const orderId = response.data.orderId
             if(!orderId) throw new Error('Payment gateway order identity failed.')
 
             // Safe stateful background interval polling instance
