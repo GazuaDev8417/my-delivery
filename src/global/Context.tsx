@@ -59,15 +59,29 @@ export const GlobalState = ({ children }:GlobalStateProps)=>{
 
     const getAllOrders = useCallback(async()=>{
         const config = getAuthHeaders()
+
         if(!config){
+            setCart([])
             console.warn('getAllOrders: No active token found in localStorage')
             return
         }
 
+        const requestToken = config.headers.Authorization
+
         try{
             const response = await axios.get(`${BASE_URL}/orders/active`, config)
+
+            if(localStorage.getItem('token') !== requestToken) return
+
             setCart(response.data)
         }catch(e:any){
+            if(localStorage.getItem('token') !== requestToken) return
+
+            if(e.response?.status === 404){
+                setCart([])
+                return
+            }
+            
             console.error('Failed to fetch active orders', e.response?.data || e.message)
         }
     }, [])

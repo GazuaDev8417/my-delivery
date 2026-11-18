@@ -16,7 +16,7 @@ import { formatPhoneNumber } from "../../utils/inputsAndKeys"
 
 const Profile = ()=>{
     const navigate = useNavigate()
-    const { user, getProfile } = useGlobal()
+    const { user, getProfile, setCart } = useGlobal()
     const { logout } = useAuth()
     const token = localStorage.getItem('token')
 
@@ -33,6 +33,7 @@ const Profile = ()=>{
     const handleLogout = ()=>{
         const confirmLogout = window.confirm('Are you sure you want to logout?')
         if(confirmLogout){
+            setCart([])
             logout()
             navigate('/', { replace: true })
         }

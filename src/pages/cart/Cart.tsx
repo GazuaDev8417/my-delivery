@@ -45,6 +45,7 @@ const Cart:FC = ()=>{
     const [qrCode, setQrCode] = useState<string | null>(null)
     const [qrCodeBase64, setQrCodeBase64] = useState<string | null>(null)
     const [qrCodeLink, setQrCodeLink] = useState<string | null>(null)
+    const [copyMessage, setCopyMessage] = useState<string>('')
     const [method, setMethod] = useState<'pix' | 'boleto' | 'card' | null>(null)
     const [restaurants, setRestaurants] = useState<Restaurant[]>([])
     const [selectedProviderId, setSelectedProviderId] = useState<string>('')
@@ -161,7 +162,6 @@ const Cart:FC = ()=>{
 
         try{
             await axios.patch(`${BASE_URL}/orders/${id}/quantity`, { quantity: newQuantity })
-            handlePixPayment()
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e?.message)
         }
@@ -170,10 +170,11 @@ const Cart:FC = ()=>{
 
     const removeItem = async(id:string)=>{
         try{
-            await axios.delete(`${BASE_URL}/orders/${id}`)
+            await axios.delete(`${BASE_URL}/orders/${id}`, {
+                headers: { Authorization: token || '' }
+            })
             setCart(prev => prev.filter(order => order.id !== id))
             getAllOrders()
-            handlePixPayment()
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e?.message)
         }
@@ -247,6 +248,19 @@ const Cart:FC = ()=>{
         setQrCodeLink(null)
         setMethod('card')
         setMpModalOpen(true)
+    }
+
+
+    const copyPixCode = async()=>{
+        if(!qrCode) return
+
+        try{
+            await navigator.clipboard.writeText(qrCode)
+            setCopyMessage('Pix code copied')
+        }catch(error){
+            console.error('Failed to copy Pix code:', error)
+            setCopyMessage('Could not copy the Pix code. Please copy it manually.')
+        }
     }
 
 
@@ -356,8 +370,24 @@ const Cart:FC = ()=>{
 
                         {qrCodeLink && (
                             <p style={{ margin: '12px 0' }}>
-                                <a href={qrCodeLink} target="_blank" rel="noopener noreferrer" className="gateway-link-btn" style={{ color: '#b11717', fontWeight: 600 }}>
-                                    Copy Pix Code Link / Open Gateway App
+                                <button type="button" onClick={copyPixCode}>
+                                    Copy Pix code
+                                </button>
+                            </p>
+                        )}
+
+                        {copyMessage && (
+                            <p role="status">{copyMessage}</p>
+                        )}
+
+                        {qrCodeLink && (
+                            <p style={{ margin: '12px 0' }}>
+                                <a
+                                    href={qrCodeLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Open payment page
                                 </a>
                             </p>
                         )}
