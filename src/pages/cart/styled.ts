@@ -216,6 +216,30 @@ export const Container = styled.div`
         text-align: center;
     }
 
+    .cancel-payment-button {
+        align-self: center;
+        margin: 0.5rem 0 1rem;
+        padding: 0.65rem 1.25rem;
+        border: 0;
+        border-radius: 6px;
+        background-color: #dc3545;
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+
+        &:hover:not(:disabled) {
+            background-color: #bb2d3b;
+            transform: translateY(-1px);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    }
+
     /* FIXED BOTTOM BAR CONTROL */
     .total-container {
         position: fixed;

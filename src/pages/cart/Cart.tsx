@@ -586,6 +586,7 @@ const Cart:FC = ()=>{
                     canCancelPayment && 
                     internalPaymentId && (
                         <button
+                            className="cancel-payment-button"
                             type="button"
                             onClick={handleCancelPayment}
                             disabled={isCancellingPayment}
