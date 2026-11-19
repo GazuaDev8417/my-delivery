@@ -45,6 +45,9 @@ const Cart:FC = ()=>{
     const [qrCode, setQrCode] = useState<string | null>(null)
     const [qrCodeBase64, setQrCodeBase64] = useState<string | null>(null)
     const [qrCodeLink, setQrCodeLink] = useState<string | null>(null)
+    const [internalPaymentId, setInternalPaymentId] = useState<string | null>(null)
+    const [canCancelPayment, setCanCancelPayment] = useState<boolean>(false)
+    const [isCancellingPayment, setIsCancellingPayment] = useState<boolean>(false)
     const [copyMessage, setCopyMessage] = useState<string>('')
     const [method, setMethod] = useState<'pix' | 'boleto' | 'card' | null>(null)
     const [restaurants, setRestaurants] = useState<Restaurant[]>([])
@@ -52,7 +55,7 @@ const Cart:FC = ()=>{
 
     const hasQrCode = !!(qrCode || qrCodeBase64 || qrCodeLink)
     const pollingIntervalRef = useRef<ReturnType<typeof setInterval>>(null)
-
+    const cancelButtonTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
 
     const providerIdsKey = [...new Set(cart.map(item => item.provider))].join(',')
@@ -126,9 +129,11 @@ const Cart:FC = ()=>{
     }, [])
 
     // Secure Auto-Polling Garbage Collection Cleanup
-    useEffect(() => {
+    useEffect(() => {        
         return () => {
             if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current)
+
+            if(cancelButtonTimeoutRef.current) clearTimeout(cancelButtonTimeoutRef.current)
         }
     }, [])
 
@@ -156,14 +161,22 @@ const Cart:FC = ()=>{
 
     const handleQuantityChange = async(e:ChangeEvent<HTMLInputElement>, id:string)=>{
         const newQuantity = Math.max(1, Number(e.target.value))
-        const updatedCart = cart.map(item => item.id === id ? { ...item, quantity: newQuantity }: item)
-
-        setCart(updatedCart)
-
+        
         try{
-            await axios.patch(`${BASE_URL}/orders/${id}/quantity`, { quantity: newQuantity })
+            await axios.patch(`${BASE_URL}/orders/${id}/quantity`, { quantity: newQuantity }, {
+                headers: { Authorization: token || '' }
+            })
+
+            setCart(prev => prev.map(item =>
+                item.id === id ? { ...item, quantity: newQuantity } : item
+            ))
         }catch(e:any){
-            console.error(e?.response?.data?.message || e?.response?.data || e?.message)
+            const message = e?.response?.data?.message ||
+                e?.message ||
+                'Could not update quantity'
+
+            console.error(message)
+            alert(message)
         }
     }
 
@@ -176,7 +189,13 @@ const Cart:FC = ()=>{
             setCart(prev => prev.filter(order => order.id !== id))
             getAllOrders()
         }catch(e:any){
-            console.error(e?.response?.data?.message || e?.response?.data || e?.message)
+            const message =
+                e?.response?.data?.message ||
+                e?.message ||
+                'Could not delete order'
+
+            console.error(message)
+            alert(message)
         }
     }
 
@@ -186,6 +205,129 @@ const Cart:FC = ()=>{
     }
 
 
+    const pendingPixCachePrefix = (paymentId:string)=>
+        `my-delivery:pending-pix:${paymentId}`
+
+    const clearPendingPixCache = (paymentId:string)=>{
+        const key = pendingPixCachePrefix(paymentId)
+        
+        sessionStorage.removeItem(`${key}:qrCode`)
+        sessionStorage.removeItem(`${key}:qrCodeBase64`)
+        sessionStorage.removeItem(`${key}:qrCodeLink`)
+    }
+
+
+    const startPaymentPolling = (paymentId:string)=>{
+        if(pollingIntervalRef.current) clearInterval(pollingIntervalRef.current)
+
+        pollingIntervalRef.current = setInterval(async()=>{
+            try{
+                const statusRes = await fetch(
+                    `${BASE_URL}/orders/payment/${paymentId}/status`,
+                    { headers: { Authorization: token || '' } }
+                )
+                const statusData = await statusRes.json()
+
+                if(statusData.status === 'approved'){
+                    if(pollingIntervalRef.current) clearInterval(pollingIntervalRef.current)
+
+                    if(cancelButtonTimeoutRef.current) clearTimeout(cancelButtonTimeoutRef.current)
+                    
+                    clearPendingPixCache(paymentId)
+                    setCanCancelPayment(false)
+                    setInternalPaymentId(null)
+                    setStatus('approved')
+                    alert('Pix payment approved successfully!')
+                    await clearCartOnSuccess()
+                }
+            }catch(error){
+                console.error('Payment status check failed:', error)
+            }
+        }, 5000)
+    }
+
+    useEffect(()=>{
+        let cancelled = false
+
+        const restorePendingPayment = async()=>{
+            try{
+                const response = await axios.get(
+                    `${BASE_URL}/orders/payment/pending`,
+                    { headers: { Authorization: token || '' } }
+                )
+                const payment = response.data
+                const createdAt = Date.parse(payment.createdAt)
+
+                if(!payment.orderId || !Number.isFinite(createdAt)){
+                    throw new Error('Pending payment data is invalid')
+                }
+                if(cancelled) return
+
+                setMethod('pix')
+                setStatus(payment.status)
+
+                const qrCacheKey = pendingPixCachePrefix(payment.orderId)
+
+                setQrCode(
+                    payment.qrCode ||
+                    sessionStorage.getItem(`${qrCacheKey}:qrCode`) ||
+                    null
+                )
+                setQrCodeBase64(
+                    payment.qrCodeBase64 ||
+                    sessionStorage.getItem(`${qrCacheKey}:qrCodeBase64`) ||
+                    null
+                )
+                setQrCodeLink(
+                    payment.qrCodeLink ||
+                    sessionStorage.getItem(`${qrCacheKey}:qrCodeLink`) ||
+                    null
+                )
+
+                setInternalPaymentId(payment.orderId)
+
+                if (payment.status === 'approved') {
+                    setCanCancelPayment(false)
+                    clearPendingPixCache(payment.orderId)
+                    setInternalPaymentId(null)
+                    await getAllOrders()
+                    return
+                }
+
+                const remainingMs = Math.max(
+                    0,
+                    60_000 - (Date.now() - createdAt)
+                )
+
+                setCanCancelPayment(remainingMs === 0)
+
+                if(remainingMs > 0){
+                    cancelButtonTimeoutRef.current = setTimeout(()=>{
+                        setCanCancelPayment(true)
+                    }, remainingMs)
+                }
+
+                startPaymentPolling(payment.orderId)
+            }catch(error:any){
+                if(cancelled || error?.response?.status === 404) return
+
+                console.error(
+                    'Could not restore pending payment:',
+                    error?.response?.data?.message || error?.message
+                )
+            }
+        }
+
+        if(token){
+            void restorePendingPayment()
+        }
+
+        return () =>{
+            cancelled = true
+        }
+    }, [token, getAllOrders])
+
+
     const handlePixPayment = async()=>{
         if(isProcessing) return
         setIsProcessing(true)
@@ -193,18 +335,18 @@ const Cart:FC = ()=>{
 
         try{
             const response = await axios.post(`${BASE_URL}/orders/payment`, {
-                paymentMethodId: 'pix',
-                email: user.email,
-                items: cart.map(item=>({
-                    title: item.product,
-                    quantity: item.quantity,
-                    unit_price: Number(item.price)
-                }))
-            },
-            {
-                headers: { Authorization: token || '' }
-            }
-        )
+                    paymentMethodId: 'pix',
+                    email: user.email,
+                    items: cart.map(item=>({
+                        title: item.product,
+                        quantity: item.quantity,
+                        unit_price: Number(item.price)
+                    }))
+                },
+                {
+                    headers: { Authorization: token || '' }
+                }
+            )
 
             setStatus(response.data.status || 'pending')
             setQrCode(response.data.qrCode || null)
@@ -213,31 +355,71 @@ const Cart:FC = ()=>{
 
             const orderId = response.data.orderId
             if(!orderId) throw new Error('Payment gateway order identity failed.')
+            
+            const qrCacheKey = pendingPixCachePrefix(orderId)
+
+            sessionStorage.setItem(`${qrCacheKey}:qrCode`, response.data.qrCode || '')
+            sessionStorage.setItem(`${qrCacheKey}:qrCodeBase64`, response.data.qrCodeBase64 || '')
+            sessionStorage.setItem(`${qrCacheKey}:qrCodeLink`, response.data.qrCodeLink || '')
+            
+            setInternalPaymentId(orderId)
+            setCanCancelPayment(false)
+
+            if(cancelButtonTimeoutRef.current){
+                clearTimeout(cancelButtonTimeoutRef.current)
+            }
+
+            cancelButtonTimeoutRef.current = setTimeout(()=>{
+                setCanCancelPayment(true)
+            }, 60_000)
 
             // Safe stateful background interval polling instance
-            pollingIntervalRef.current = setInterval(async()=>{
-                try{
-                    const statusRes = await fetch(`${BASE_URL}/orders/payment/${orderId}/status`,
-                        {
-                            headers: { Authorization: token || '' }
-                        }
-                    )
-                    const statusData = await statusRes.json()
-
-                    if(statusData.status === 'approved'){
-                        if(pollingIntervalRef.current) clearInterval(pollingIntervalRef.current)
-                        setStatus('approved')
-                        alert('Pix payment approved successfully!')
-                        await clearCartOnSuccess()
-                    }
-                }catch(pollErr){
-                    console.error("Status check tracking intermittent variance: ", pollErr)
-                }
-            }, 5000)
+            startPaymentPolling(orderId)
         }catch(e:any){
             console.error(e?.response?.data?.message || e?.response?.data || e?.message)
         }finally{
             setIsProcessing(false)
+        }
+    }
+
+
+    const handleCancelPayment = async()=>{
+        if(!internalPaymentId || isCancellingPayment) return
+
+        setIsCancellingPayment(true)
+
+        try{
+            await axios.post(
+                `${BASE_URL}/orders/payment/${internalPaymentId}/cancel`,
+                {},
+                { headers: { Authorization: token || '' } }
+            )
+
+            if(pollingIntervalRef.current){
+                clearInterval(pollingIntervalRef.current)
+            }
+
+            if(cancelButtonTimeoutRef.current){
+                clearTimeout(cancelButtonTimeoutRef.current)
+            }
+
+            clearPendingPixCache(internalPaymentId)
+            setInternalPaymentId(null)
+            setCanCancelPayment(false)
+            setStatus('cancelled')
+            alert('Payment cancelled. The order has expired.')
+
+            await getAllOrders()
+        }catch(e:any){
+            const message =
+                e?.response?.data?.message ||
+                e?.message ||
+                'Could not cancel payment'
+
+            console.error(message)
+            alert(message)
+        }finally{
+            setIsCancellingPayment(false)
         }
     }
 
@@ -396,8 +578,20 @@ const Cart:FC = ()=>{
                             <div className={`status-pill ${status}`} style={{ fontWeight: 600, color: status === 'approved' ? 'green' : '#ff9800' }}>
                                 Status: {status === 'pending' ? 'Pending Payment verification...' : 'Completed'}
                             </div>
-                        )}
+                        )}                        
                     </div>
+                )}
+                {method === 'pix' &&
+                    status === 'pending' && 
+                    canCancelPayment && 
+                    internalPaymentId && (
+                        <button
+                            type="button"
+                            onClick={handleCancelPayment}
+                            disabled={isCancellingPayment}
+                        >
+                            {isCancellingPayment ? 'Cancelling...' : 'Cancel order'}
+                        </button>
                 )}
 
                 {cart.length > 0 && (
