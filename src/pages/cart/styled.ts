@@ -240,6 +240,20 @@ export const Container = styled.div`
         }
     }
 
+    .payment-unavailable-warning {
+        margin: 0.5rem 0;
+        padding: 1rem;
+        border: 1px solid #f0ad4e;
+        border-radius: 8px;
+        background-color: #fff8e6;
+        color: #664d03;
+        text-align: center;
+
+        p {
+            margin: 0.5rem 0 0;
+        }
+    }
+
     /* FIXED BOTTOM BAR CONTROL */
     .total-container {
         position: fixed;

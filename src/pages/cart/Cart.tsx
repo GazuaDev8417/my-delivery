@@ -581,6 +581,22 @@ const Cart:FC = ()=>{
                         )}                        
                     </div>
                 )}
+
+                {import.meta.env.PROD && 
+                    method === 'pix' &&
+                    status === 'pending' &&
+                    canCancelPayment &&
+                    !hasQrCode &&(
+                        <div className="payment-unavailable-warning" role="alert">
+                            <strong>Pix indisponível nesta tela.</strong>
+                            <p>
+                                The QR Code and Pix code are not available here. 
+                                If you did not save the payment details, please cancel this
+                                order using the button below. Then, place a new order.
+                            </p>
+                        </div>
+                    )}
+
                 {method === 'pix' &&
                     status === 'pending' && 
                     canCancelPayment && 
