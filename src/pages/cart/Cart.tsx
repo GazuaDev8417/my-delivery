@@ -425,7 +425,14 @@ const Cart:FC = ()=>{
 
 
     const handlePaymentCard = () => {
-       setQrCode(null)
+        if(method === 'pix' && status === 'pending' && internalPaymentId){
+            alert(
+                'There is a pending Pix payment for this order. To pay by card, please wait for the "Cancel order" option to appear, cancel the Pix payment, and place the order again. Canceling will void this order and return the items to stock.'
+            )
+            return
+        }
+        
+        setQrCode(null)
         setQrCodeBase64(null)
         setQrCodeLink(null)
         setMethod('card')
@@ -537,7 +544,13 @@ const Cart:FC = ()=>{
 
                 {/* Mercado Pago Integration Components Layer */}
                 {mpModalOpen && method === 'card' && (
-                    <MpModal setModalOpen={setMpModalOpen} setQrCode={setQrCode} total={total} />
+                    <MpModal 
+                        setModalOpen={setMpModalOpen} 
+                        setQrCode={setQrCode} 
+                        total={total}
+                        token={token || ''}
+                        getAllOrders={getAllOrders} 
+                    />
                 )}
 
                 {/* Render Pix Instant QR Output Layout Block */}
